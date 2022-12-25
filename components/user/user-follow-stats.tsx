@@ -6,15 +6,15 @@ import { useRouter } from 'next/router';
 import { NumberStats } from '@components/tweet/number-stats';
 import type { User } from '@lib/types/user';
 
-type UserFollowStatsProps = Pick<User, 'following' | 'followers'>;
+type UserFollowStatsProps = Pick<User, 'subscribed' | 'subscriber'>;
 type Stats = [string, string, number, number];
 
 export function UserFollowStats({
-  following,
-  followers
+  subscribed,
+  subscriber
 }: UserFollowStatsProps): JSX.Element {
-  const totalFollowing = following.length;
-  const totalFollowers = followers.length;
+  const totalFollowing = subscribed.length;
+  const totalFollowers = subscriber.length;
 
   const [{ currentFollowers, currentFollowing }, setCurrentStats] = useState({
     currentFollowing: totalFollowing,

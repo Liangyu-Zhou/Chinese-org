@@ -20,7 +20,7 @@ export function FollowButton({
 
   if (user?.id === userTargetId) return null;
 
-  const { id: userId, following } = user ?? {};
+  const { id: userId, subscribed } = user ?? {};
 
   const handleFollow = (): Promise<void> =>
     manageFollow('follow', userId as string, userTargetId);
@@ -30,7 +30,7 @@ export function FollowButton({
     closeModal();
   };
 
-  const userIsFollowed = !!following?.includes(userTargetId ?? '');
+  const userIsFollowed = !!subscribed?.includes(userTargetId ?? '');
 
   return (
     <>

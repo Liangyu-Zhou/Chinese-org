@@ -59,14 +59,15 @@ export function AuthContextProvider({
           photoURL: 'https://picsum.photos/id/237/200/300',
           username: address,
           verified: false,
-          following: [],
-          followers: [],
+          subscribed: [],
+          subscriber: [],
           createdAt: serverTimestamp(),
           updatedAt: null,
           totalTweets: 0,
           totalPhotos: 0,
           pinnedTweet: null,
-          coverPhotoURL: null
+          coverPhotoURL: null,
+          balance: 100
         };
 
         const userStatsData: WithFieldValue<Stats> = {

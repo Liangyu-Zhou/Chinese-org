@@ -12,8 +12,8 @@ export type User = {
   username: string;
   photoURL: string;
   verified: boolean;
-  following: string[];
-  followers: string[];
+  subscribed: string[];
+  subscriber: string[];
   createdAt: Timestamp;
   updatedAt: Timestamp | null;
   totalTweets: number;
