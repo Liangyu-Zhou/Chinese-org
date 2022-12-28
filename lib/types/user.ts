@@ -12,15 +12,14 @@ export type User = {
   username: string;
   photoURL: string;
   verified: boolean;
-  subscribed: string[];
-  subscriber: string[];
+  following: string[];
+  followers: string[];
   createdAt: Timestamp;
   updatedAt: Timestamp | null;
   totalTweets: number;
   totalPhotos: number;
   pinnedTweet: string | null;
   coverPhotoURL: string | null;
-  balance: number;
 };
 
 export type EditableData = Extract<

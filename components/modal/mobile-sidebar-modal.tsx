@@ -64,8 +64,8 @@ type MobileSidebarModalProps = Pick<
   | 'username'
   | 'verified'
   | 'photoURL'
-  | 'subscribed'
-  | 'subscriber'
+  | 'following'
+  | 'followers'
   | 'coverPhotoURL'
 > & {
   closeModal: () => void;
@@ -76,8 +76,8 @@ export function MobileSidebarModal({
   username,
   verified,
   photoURL,
-  subscribed,
-  subscriber,
+  following,
+  followers,
   coverPhotoURL,
   closeModal
 }: MobileSidebarModalProps): JSX.Element {
@@ -96,8 +96,8 @@ export function MobileSidebarModal({
   } = useModal();
 
   const allStats: Readonly<Stats[]> = [
-    ['following', 'Following', subscribed.length],
-    ['followers', 'Followers', subscriber.length]
+    ['following', 'Following', following.length],
+    ['followers', 'Followers', followers.length]
   ];
 
   const userLink = `/user/${username}`;

@@ -18,8 +18,8 @@ type UserTooltipProps = Pick<
   | 'verified'
   | 'username'
   | 'photoURL'
-  | 'subscribed'
-  | 'subscriber'
+  | 'following'
+  | 'followers'
   | 'coverPhotoURL'
 > & {
   modal?: boolean;
@@ -39,8 +39,8 @@ export function UserTooltip({
   children,
   photoURL,
   username,
-  subscribed,
-  subscriber,
+  following,
+  followers,
   coverPhotoURL
 }: UserTooltipProps): JSX.Element {
   const { isMobile } = useWindow();
@@ -50,8 +50,8 @@ export function UserTooltip({
   const userLink = `/user/${username}`;
 
   const allStats: Readonly<Stats[]> = [
-    ['following', 'Following', subscribed.length],
-    ['followers', 'Followers', subscriber.length]
+    ['following', 'Following', following.length],
+    ['followers', 'Followers', followers.length]
   ];
 
   return (

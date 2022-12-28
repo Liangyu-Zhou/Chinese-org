@@ -17,8 +17,8 @@ type UserDetailsProps = Pick<
   | 'location'
   | 'verified'
   | 'createdAt'
-  | 'subscribed'
-  | 'subscriber'
+  | 'following'
+  | 'followers'
 >;
 
 type DetailIcon = [string | null, IconName];
@@ -32,8 +32,8 @@ export function UserDetails({
   location,
   verified,
   createdAt,
-  subscribed,
-  subscriber
+  following,
+  followers
 }: UserDetailsProps): JSX.Element {
   const detailIcons: Readonly<DetailIcon[]> = [
     [location, 'MapPinIcon'],
@@ -90,7 +90,7 @@ export function UserDetails({
           )}
         </div>
       </div>
-      <UserFollowStats subscribed={subscribed} subscriber={subscriber} />
+      <UserFollowStats following={following} followers={followers} />
     </>
   );
 }

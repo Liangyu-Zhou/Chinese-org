@@ -98,20 +98,20 @@ export async function manageFollow(
 
   if (type === 'follow') {
     batch.update(userDocRef, {
-      subscribed: arrayUnion(targetUserId),
+      following: arrayUnion(targetUserId),
       updatedAt: serverTimestamp()
     });
     batch.update(targetUserDocRef, {
-      subscriber: arrayUnion(userId),
+      followers: arrayUnion(userId),
       updatedAt: serverTimestamp()
     });
   } else {
     batch.update(userDocRef, {
-      subscribed: arrayRemove(targetUserId),
+      following: arrayRemove(targetUserId),
       updatedAt: serverTimestamp()
     });
     batch.update(targetUserDocRef, {
-      subscriber: arrayRemove(userId),
+      followers: arrayRemove(userId),
       updatedAt: serverTimestamp()
     });
   }
