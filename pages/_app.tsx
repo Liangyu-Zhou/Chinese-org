@@ -14,6 +14,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, polygon, optimism, arbitrum, goerli } from 'wagmi/chains';
+import { fusion } from '../components/fusion/chain';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
@@ -28,6 +29,7 @@ type AppPropsWithLayout = AppProps & {
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
+    fusion,
     mainnet,
     polygon,
     optimism,

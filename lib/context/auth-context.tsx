@@ -34,6 +34,8 @@ type AuthContextProviderProps = {
   children: ReactNode;
 };
 
+function sendTokenAfterRegistry() {}
+
 export function AuthContextProvider({
   children
 }: AuthContextProviderProps): JSX.Element {
@@ -66,7 +68,8 @@ export function AuthContextProvider({
           totalTweets: 0,
           totalPhotos: 0,
           pinnedTweet: null,
-          coverPhotoURL: null
+          coverPhotoURL: null,
+          balance: 100
         };
 
         const userStatsData: WithFieldValue<Stats> = {
