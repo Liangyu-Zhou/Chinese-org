@@ -1,9 +1,9 @@
 const footerLinks = [
-  ['Terms of Service', 'https://Chinese.org'],
-  ['Privacy Policy', 'https://Chinese.org'],
-  ['Cookie Policy', 'https://Chinese.org'],
-  ['Accessibility', 'https://Chinese.org'],
-  ['Ads Info', 'https://Chinese.org']
+  ['Terms of Service', 'https://Chinese.org/1'],
+  ['Privacy Policy', 'https://Chinese.org/2'],
+  ['Cookie Policy', 'https://Chinese.org/3'],
+  ['Accessibility', 'https://Chinese.org/4'],
+  ['Ads Info', 'https://Chinese.org/5']
 ] as const;
 
 export function AsideFooter(): JSX.Element {

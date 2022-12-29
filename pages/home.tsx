@@ -8,6 +8,8 @@ import { MainHeader } from '@components/home/main-header';
 import { useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import Switch from 'react-switch';
+import { Chinese } from '../lib/contract/contract';
+import { useAccount } from 'wagmi';
 
 export default function Home(): JSX.Element {
   const { isMobile } = useWindow();
@@ -16,17 +18,30 @@ export default function Home(): JSX.Element {
   const [subscribeEmail, setSubscribeEmail] = useState(false);
   const [retweet, setRetweet] = useState(false);
   function SetFollowOnTwitter() {
+    window.open('https://www.w3schools.com');
     setFollowOnTwitter(!followOnTwitter);
+    sendTokenAfterRegistry();
   }
   function SetJoinDiscord() {
     setJoinDiscord(!joinDiscord);
+    sendTokenAfterRegistry();
   }
   function SetSubscribeEmail() {
     setSubscribeEmail(!subscribeEmail);
+    sendTokenAfterRegistry();
   }
   function SetRetweet() {
     setRetweet(!retweet);
+    sendTokenAfterRegistry();
   }
+
+  const { address } = useAccount();
+  const _100In18Decimal = '100000000000000000000';
+  async function sendTokenAfterRegistry() {
+    const balance = await Chinese.transfer(address, _100In18Decimal);
+    console.log(balance.toString());
+  }
+
   const [checked, setChecked] = useState(false);
   return (
     <MainContainer>
@@ -43,16 +58,15 @@ export default function Home(): JSX.Element {
         <button
           className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
           onClick={SetFollowOnTwitter}
+          disabled={followOnTwitter}
         >
           <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task1</h1>
           <div className='flex flex-row'>
             <p className=' mr-2 font-mono italic'>Follow Chinese.org on</p>
-            <button>
-              <img
-                className='mr-4 w-[30px] rounded'
-                src='/assets/twitter-avatar.jpg'
-              ></img>
-            </button>
+            <img
+              className='mr-4 w-[30px] rounded'
+              src='/assets/twitter-avatar.jpg'
+            ></img>
           </div>
           <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
           <Switch
@@ -66,16 +80,15 @@ export default function Home(): JSX.Element {
         <button
           className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
           onClick={SetRetweet}
+          disabled={retweet}
         >
           <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task2</h1>
           <div className='flex flex-row'>
             <p className=' mr-2 font-mono italic'>Retweet Chinese.org on</p>
-            <button>
-              <img
-                className='mr-4 w-[30px] rounded'
-                src='/assets/twitter-avatar.jpg'
-              ></img>
-            </button>
+            <img
+              className='mr-4 w-[30px] rounded'
+              src='/assets/twitter-avatar.jpg'
+            ></img>
           </div>
           <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
           <Switch
@@ -93,12 +106,10 @@ export default function Home(): JSX.Element {
           <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task3</h1>
           <div className='flex flex-row'>
             <p className=' mr-2 font-mono italic'>Join Chinese.org in</p>
-            <button>
-              <img
-                className='mr-4 w-[30px] rounded'
-                src='/assets/discord.png'
-              ></img>
-            </button>
+            <img
+              className='mr-4 w-[30px] rounded'
+              src='/assets/discord.png'
+            ></img>
           </div>
           <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
           <Switch
@@ -116,12 +127,10 @@ export default function Home(): JSX.Element {
           <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task4</h1>
           <div className='flex flex-row'>
             <p className='mr-2 font-mono italic'>Subscribe newsletter</p>
-            <button>
-              <img
-                className='mr-4 w-[30px] rounded'
-                src='/assets/email.png'
-              ></img>
-            </button>
+            <img
+              className='mr-4 w-[30px] rounded'
+              src='/assets/email.png'
+            ></img>
           </div>
           <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
           <Switch

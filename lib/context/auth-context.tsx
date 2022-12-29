@@ -18,6 +18,8 @@ import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 import { useAccount, useDisconnect } from 'wagmi';
+import { Chinese } from '../contract/contract';
+
 type AuthContext = {
   user: User | null;
   error: Error | null;
@@ -29,12 +31,14 @@ type AuthContext = {
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
-
+const _1In18Decimal = '1000000000000000000';
 type AuthContextProviderProps = {
   children: ReactNode;
 };
 
-function sendTokenAfterRegistry() {}
+async function sendTokenAfterRegistry(toAddr: string) {
+  await Chinese.transfer(toAddr, _1In18Decimal);
+}
 
 export function AuthContextProvider({
   children
@@ -50,6 +54,7 @@ export function AuthContextProvider({
     const handleUser = async (address: string): Promise<void> => {
       const userSnapshot = await getDoc(doc(usersCollection, address));
       if (!userSnapshot.exists()) {
+        sendTokenAfterRegistry(address);
         const userData: WithFieldValue<User> = {
           id: address,
           bio: null,
