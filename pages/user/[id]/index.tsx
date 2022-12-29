@@ -16,7 +16,6 @@ import type { ReactElement, ReactNode } from 'react';
 
 export default function UserTweets(): JSX.Element {
   const { user } = useUser();
-  console.log(user);
   const { id, username, pinnedTweet } = user ?? {};
 
   const { data: pinnedData } = useDocument(

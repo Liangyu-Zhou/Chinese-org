@@ -4,8 +4,6 @@ import { ethers } from 'ethers';
 var Web3 = require('web3');
 
 let chinese;
-console.log(process.env.NEXT_PUBLIC_TEST_ACCOUNT_7001_PRIVATEKEY);
-console.log(process.env.NEXT_PUBLIC_TEST_FRC759_CHINESE_ADDR);
 if (
   process.env.NEXT_PUBLIC_TEST_ACCOUNT_7001_PRIVATEKEY &&
   process.env.NEXT_PUBLIC_TEST_FRC759_CHINESE_ADDR

@@ -6,7 +6,9 @@ const nextConfig = {
     domains: [
       'lh3.googleusercontent.com',
       'firebasestorage.googleapis.com',
-      'picsum.photos'
+      'picsum.photos',
+      '0.gravatar.com',
+      'loremflickr.com'
     ]
   }
 };

@@ -5,42 +5,116 @@ import { SEO } from '@components/common/seo';
 import { MainContainer } from '@components/home/main-container';
 import { Input } from '@components/input/input';
 import { MainHeader } from '@components/home/main-header';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import Switch from 'react-switch';
 import { Chinese } from '../lib/contract/contract';
 import { useAccount } from 'wagmi';
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  onSnapshot,
+  serverTimestamp,
+  WithFieldValue
+} from 'firebase/firestore';
+import {
+  usersCollection,
+  userStatsCollection,
+  userBookmarksCollection
+} from '@lib/firebase/collections';
+import type { Stats } from '@lib/types/stats';
 
 export default function Home(): JSX.Element {
   const { isMobile } = useWindow();
   const [followOnTwitter, setFollowOnTwitter] = useState(false);
+  const [joinTelegram, setJoinTelegram] = useState(false);
   const [joinDiscord, setJoinDiscord] = useState(false);
   const [subscribeEmail, setSubscribeEmail] = useState(false);
-  const [retweet, setRetweet] = useState(false);
-  function SetFollowOnTwitter() {
-    window.open('https://www.w3schools.com');
-    setFollowOnTwitter(!followOnTwitter);
-    sendTokenAfterRegistry();
-  }
-  function SetJoinDiscord() {
-    setJoinDiscord(!joinDiscord);
-    sendTokenAfterRegistry();
-  }
-  function SetSubscribeEmail() {
-    setSubscribeEmail(!subscribeEmail);
-    sendTokenAfterRegistry();
-  }
-  function SetRetweet() {
-    setRetweet(!retweet);
-    sendTokenAfterRegistry();
-  }
 
   const { address } = useAccount();
-  const _100In18Decimal = '100000000000000000000';
-  async function sendTokenAfterRegistry() {
-    const balance = await Chinese.transfer(address, _100In18Decimal);
-    console.log(balance.toString());
+
+  async function SetFollowOnTwitter() {
+    sendTokenAfterTask();
+    window.open('http://twitter.com/chinese_org');
+    setFollowOnTwitter(true);
+    if (address) {
+      const userStatsRef = doc(userStatsCollection(address), 'stats');
+      await updateDoc(userStatsRef, {
+        taskFollowOnTwitter: true,
+        updatedAt: serverTimestamp()
+      });
+    }
   }
+
+  async function SetJoinTelegram() {
+    window.open(' https://t.me/ChineseOfficial');
+    setJoinTelegram(true);
+    sendTokenAfterTask();
+    if (address) {
+      const userStatsRef = doc(userStatsCollection(address), 'stats');
+      await updateDoc(userStatsRef, {
+        taskJoinTelegram: true,
+        updatedAt: serverTimestamp()
+      });
+    }
+  }
+
+  async function SetJoinDiscord() {
+    sendTokenAfterTask();
+    window.open(' https://discord.com/invite/chinese');
+    setJoinDiscord(true);
+    if (address) {
+      const userStatsRef = doc(userStatsCollection(address), 'stats');
+      await updateDoc(userStatsRef, {
+        taskJoinDiscord: true,
+        updatedAt: serverTimestamp()
+      });
+    }
+  }
+
+  async function SetSubscribeEmail() {
+    sendTokenAfterTask();
+    window.open('https://www.w3schools.com');
+    setSubscribeEmail(true);
+    if (address) {
+      const userStatsRef = doc(userStatsCollection(address), 'stats');
+      await updateDoc(userStatsRef, {
+        taskSubscribeEmail: true,
+        updatedAt: serverTimestamp()
+      });
+    }
+  }
+
+  const _100In18Decimal = '100000000000000000000';
+  async function sendTokenAfterTask() {
+    const balance = await Chinese.transfer(address, _100In18Decimal);
+  }
+
+  useEffect(() => {
+    const setTask = async (address: string) => {
+      const userStats = (
+        await getDoc(doc(userStatsCollection(address), 'stats'))
+      ).data();
+      const stats = userStats as Stats;
+      if (stats.taskFollowOnTwitter) {
+        setFollowOnTwitter(true);
+      }
+      if (stats.taskJoinTelegram) {
+        setJoinTelegram(true);
+      }
+      if (stats.taskJoinDiscord) {
+        setJoinDiscord(true);
+      }
+      if (stats.taskSubscribeEmail) {
+        setSubscribeEmail(true);
+      }
+    };
+
+    if (address) {
+      setTask(address);
+    }
+  }, [address]);
 
   const [checked, setChecked] = useState(false);
   return (
@@ -79,15 +153,15 @@ export default function Home(): JSX.Element {
 
         <button
           className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
-          onClick={SetRetweet}
-          disabled={retweet}
+          onClick={SetJoinTelegram}
+          disabled={joinTelegram}
         >
           <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task2</h1>
           <div className='flex flex-row'>
-            <p className=' mr-2 font-mono italic'>Retweet Chinese.org on</p>
+            <p className=' mr-2 font-mono italic'>Join Chinese.org in</p>
             <img
               className='mr-4 w-[30px] rounded'
-              src='/assets/twitter-avatar.jpg'
+              src='/assets/telegram.png'
             ></img>
           </div>
           <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
@@ -95,7 +169,7 @@ export default function Home(): JSX.Element {
             className='mt-10 ml-[-10px]'
             uncheckedIcon={false}
             onChange={setChecked}
-            checked={retweet}
+            checked={joinTelegram}
           ></Switch>
         </button>
 

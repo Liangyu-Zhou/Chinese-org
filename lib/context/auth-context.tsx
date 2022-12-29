@@ -63,7 +63,7 @@ export function AuthContextProvider({
           accent: null,
           website: null,
           location: null,
-          photoURL: 'https://picsum.photos/id/237/200/300',
+          photoURL: 'https://loremflickr.com/320/240?lock=4',
           username: address,
           verified: false,
           following: [],
@@ -73,14 +73,17 @@ export function AuthContextProvider({
           totalTweets: 0,
           totalPhotos: 0,
           pinnedTweet: null,
-          coverPhotoURL: null,
-          balance: 100
+          coverPhotoURL: null
         };
 
         const userStatsData: WithFieldValue<Stats> = {
           likes: [],
           tweets: [],
-          updatedAt: null
+          updatedAt: null,
+          taskFollowOnTwitter: false,
+          taskJoinDiscord: false,
+          taskJoinTelegram: false,
+          taskSubscribeEmail: false
         };
 
         try {

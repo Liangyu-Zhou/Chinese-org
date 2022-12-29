@@ -17,6 +17,7 @@ const e18 = '1000000000000000000';
 export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
   const { address } = useAccount();
   const [balance, setBalance] = useState(0);
+  const [tick, setTick] = useState(0);
   async function getBalance(addr: string) {
     //balanceOf is a promise
     const balanceBN = await Chinese.balanceOf(addr);
@@ -24,29 +25,34 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
       .toBN(balanceBN)
       .div(Web3.utils.toBN(e18))
       .toNumber();
-    console.log('enter getBalance, balance:', balance);
+    // console.log('enter getBalance, balance:', balance);
     setBalance(balance);
   }
   useEffect(() => {
+    if (address) {
+      getBalance(address);
+    }
     const timeoutId = setTimeout(() => {
       if (address) {
         getBalance(address);
       }
+      setTick((tick) => tick + 1);
     }, 5000);
     return () => clearTimeout(timeoutId);
-  });
+  }, [tick, address]);
+
   return (
     <section
       className={'hover-animation rounded-2xl bg-main-sidebar-background'}
     >
       <div className='ml-5 mr-5 flex flex-row justify-between pt-2 pb-1'>
         <p>$CHINESE Price</p>
-        <p>≈$0.0000002396 USD</p>
+        <p>≈$0.00000024 USD</p>
       </div>
       <div className='ml-5 mr-5 flex flex-row justify-between pt-1 pb-2'>
         <p>Your $CHINESE</p>
         <p>
-          {balance}≈${balance * 0.0000002396} USD
+          {balance}≈${(balance * 0.00000024).toFixed(8)} USD
         </p>
       </div>
     </section>
