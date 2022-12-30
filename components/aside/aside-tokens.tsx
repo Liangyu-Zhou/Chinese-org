@@ -2,8 +2,7 @@ import type { MotionProps } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
 import { Chinese } from '../../lib/contract/contract';
-import Web3 from 'web3';
-
+import { BigNumber } from 'ethers';
 export const variants: MotionProps = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
@@ -22,19 +21,16 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
   async function getBalance(addr: string) {
     //balanceOf is a promise
     const balanceBN = await Chinese.balanceOf(addr);
-    const balance = Web3.utils
-      .toBN(balanceBN)
-      .div(Web3.utils.toBN(e18))
-      .toNumber();
+    const balance = balanceBN.div(BigNumber.from(e18)).toNumber();
     setBalance(balance);
   }
   useEffect(() => {
     if (address) {
-      getBalance(address);
+      void getBalance(address);
     }
     const timeoutId = setTimeout(() => {
       if (address) {
-        getBalance(address);
+        void getBalance(address);
       }
       setTick((tick) => tick + 1);
     }, 5000);

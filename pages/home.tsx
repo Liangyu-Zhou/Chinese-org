@@ -89,7 +89,9 @@ export default function Home(): JSX.Element {
 
   const _100In18Decimal = '100000000000000000000';
   async function sendTokenAfterTask() {
-    await Chinese.transfer(address, _100In18Decimal);
+    if (address) {
+      await Chinese.transfer(address, _100In18Decimal);
+    }
   }
 
   useEffect(() => {
