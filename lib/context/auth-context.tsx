@@ -31,13 +31,13 @@ type AuthContext = {
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
-const _1In18Decimal = '1000000000000000000';
+const _100In18Decimal = '100000000000000000000';
 type AuthContextProviderProps = {
   children: ReactNode;
 };
 
 async function sendTokenAfterRegistry(toAddr: string) {
-  await Chinese.transfer(toAddr, _1In18Decimal);
+  await Chinese.transfer(toAddr, _100In18Decimal);
 }
 
 export function AuthContextProvider({
