@@ -54,7 +54,7 @@ export function AuthContextProvider({
     const handleUser = async (address: string): Promise<void> => {
       const userSnapshot = await getDoc(doc(usersCollection, address));
       if (!userSnapshot.exists()) {
-        sendTokenAfterRegistry(address);
+        await sendTokenAfterRegistry(address);
         const userData: WithFieldValue<User> = {
           id: address,
           bio: null,

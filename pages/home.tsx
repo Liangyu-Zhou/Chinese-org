@@ -1,3 +1,5 @@
+import { Chinese } from '../lib/contract/contract';
+import { useState, useEffect } from 'react';
 import { useWindow } from '@lib/context/window-context';
 import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { MainLayout } from '@components/layout/main-layout';
@@ -5,10 +7,9 @@ import { SEO } from '@components/common/seo';
 import { MainContainer } from '@components/home/main-container';
 import { Input } from '@components/input/input';
 import { MainHeader } from '@components/home/main-header';
-import { useState, useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import Switch from 'react-switch';
-import { Chinese } from '../lib/contract/contract';
+
 import { useAccount } from 'wagmi';
 import {
   doc,
@@ -35,9 +36,9 @@ export default function Home(): JSX.Element {
   const { address } = useAccount();
 
   async function SetFollowOnTwitter() {
-    sendTokenAfterTask();
     window.open('http://twitter.com/chinese_org');
     setFollowOnTwitter(true);
+    await sendTokenAfterTask();
     if (address) {
       const userStatsRef = doc(userStatsCollection(address), 'stats');
       await updateDoc(userStatsRef, {
@@ -50,7 +51,7 @@ export default function Home(): JSX.Element {
   async function SetJoinTelegram() {
     window.open(' https://t.me/ChineseOfficial');
     setJoinTelegram(true);
-    sendTokenAfterTask();
+    await sendTokenAfterTask();
     if (address) {
       const userStatsRef = doc(userStatsCollection(address), 'stats');
       await updateDoc(userStatsRef, {
@@ -61,9 +62,9 @@ export default function Home(): JSX.Element {
   }
 
   async function SetJoinDiscord() {
-    sendTokenAfterTask();
     window.open(' https://discord.com/invite/chinese');
     setJoinDiscord(true);
+    await sendTokenAfterTask();
     if (address) {
       const userStatsRef = doc(userStatsCollection(address), 'stats');
       await updateDoc(userStatsRef, {
@@ -74,9 +75,9 @@ export default function Home(): JSX.Element {
   }
 
   async function SetSubscribeEmail() {
-    sendTokenAfterTask();
     window.open('https://www.w3schools.com');
     setSubscribeEmail(true);
+    await sendTokenAfterTask();
     if (address) {
       const userStatsRef = doc(userStatsCollection(address), 'stats');
       await updateDoc(userStatsRef, {
@@ -88,7 +89,7 @@ export default function Home(): JSX.Element {
 
   const _100In18Decimal = '100000000000000000000';
   async function sendTokenAfterTask() {
-    const balance = await Chinese.transfer(address, _100In18Decimal);
+    await Chinese.transfer(address, _100In18Decimal);
   }
 
   useEffect(() => {
@@ -112,7 +113,7 @@ export default function Home(): JSX.Element {
     };
 
     if (address) {
-      setTask(address);
+      void setTask(address);
     }
   }, [address]);
 

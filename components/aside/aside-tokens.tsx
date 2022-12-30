@@ -14,6 +14,7 @@ type AsideTokensProps = {
   tokenVal?: number;
 };
 const e18 = '1000000000000000000';
+
 export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
   const { address } = useAccount();
   const [balance, setBalance] = useState(0);
@@ -25,7 +26,6 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
       .toBN(balanceBN)
       .div(Web3.utils.toBN(e18))
       .toNumber();
-    // console.log('enter getBalance, balance:', balance);
     setBalance(balance);
   }
   useEffect(() => {
