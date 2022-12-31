@@ -142,7 +142,7 @@ export function InputOptions({
           // disabled={!isValidTweet}
           disabled={true}
         >
-          {reply ? 'Reply' : 'Post'}
+          {reply ? 'Reply' : 'Tweet'}
         </Button>
       </div>
     </motion.div>

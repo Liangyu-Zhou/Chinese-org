@@ -21,32 +21,27 @@ export function Suggestions(): JSX.Element {
   const { randomSeed } = useAuth();
 
   const { data: adminData, loading: adminLoading } = useDocument(
-    doc(usersCollection, 'Twt0A27bx9YcG4vu3RTsR7ifJzf2'),
+    doc(usersCollection, '0x6Fc5CbF064BD58c6EE985fBE51F7F6F377C97001'),
     { allowNull: true }
   );
 
   const { data: suggestionsData, loading: suggestionsLoading } = useCollection(
-    query(
-      usersCollection,
-      where(documentId(), '>=', randomSeed),
-      orderBy(documentId()),
-      limit(3)
-    ),
+    query(usersCollection, orderBy(documentId()), limit(3)),
     { allowNull: true }
   );
 
   return (
     <section className='hover-animation rounded-2xl bg-main-sidebar-background'>
-      {adminLoading || suggestionsLoading ? (
+      {suggestionsLoading ? (
         <Loading className='flex h-52 items-center justify-center p-4' />
       ) : suggestionsData ? (
         <motion.div className='inner:px-4 inner:py-3' {...variants}>
-          <h2 className='text-xl font-bold'>Who to Subscribe</h2>
+          <h2 className='text-xl font-bold'>Who to Follow</h2>
           {adminData && <UserCard {...adminData} />}
           {suggestionsData?.map((userData) => (
             <UserCard {...userData} key={userData.id} />
           ))}
-          <Link href='/home'>
+          <Link href='/People'>
             <a
               className='custom-button accent-tab hover-card block w-full cursor-not-allowed rounded-2xl
                          rounded-t-none text-center text-main-accent'
