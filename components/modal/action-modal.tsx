@@ -41,14 +41,14 @@ export function ActionModal({
   return (
     <div className='flex flex-col gap-6'>
       <div className='flex flex-col gap-4'>
-        {useIcon && (
+        {/* {useIcon && (
           <i className='mx-auto'>
             <CustomIcon
-              className='h-10 w-10 text-accent-blue dark:text-twitter-icon'
+              className='h-10 w-10 text-accent-orange dark:text-twitter-icon'
               iconName='TwitterIcon'
             />
           </i>
-        )}
+        )} */}
         <div className='flex flex-col gap-2'>
           <Dialog.Title className='text-xl font-bold'>{title}</Dialog.Title>
           <Dialog.Description className='text-light-secondary dark:text-dark-secondary'>

@@ -37,7 +37,7 @@ export function Suggestions(): JSX.Element {
       ) : suggestionsData ? (
         <motion.div className='inner:px-4 inner:py-3' {...variants}>
           <h2 className='text-xl font-bold'>Who to Follow</h2>
-          {adminData && <UserCard {...adminData} />}
+          {/* {adminData && <UserCard {...adminData} />} */}
           {suggestionsData?.map((userData) => (
             <UserCard {...userData} key={userData.id} />
           ))}
