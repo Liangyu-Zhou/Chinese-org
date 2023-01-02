@@ -1,13 +1,6 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import {
-  doc,
-  limit,
-  query,
-  where,
-  orderBy,
-  documentId
-} from 'firebase/firestore';
+import { doc, limit, query, where, documentId } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { useCollection } from '@lib/hooks/useCollection';
 import { useDocument } from '@lib/hooks/useDocument';
@@ -26,7 +19,13 @@ export function Suggestions(): JSX.Element {
   );
 
   const { data: suggestionsData, loading: suggestionsLoading } = useCollection(
-    query(usersCollection, orderBy(documentId()), limit(3)),
+    query(
+      usersCollection,
+      where('id', 'in', [
+        '0xcb1C05637Ee71713312C61FeF6ba83a99f549D68',
+        '0x70926c6F19A240fB23957B85F7A0241ABf90D304'
+      ])
+    ),
     { allowNull: true }
   );
 
@@ -41,9 +40,9 @@ export function Suggestions(): JSX.Element {
           {suggestionsData?.map((userData) => (
             <UserCard {...userData} key={userData.id} />
           ))}
-          <Link href='/People'>
+          <Link href='/people'>
             <a
-              className='custom-button accent-tab hover-card block w-full cursor-not-allowed rounded-2xl
+              className='custom-button accent-tab hover-card block w-full rounded-2xl
                          rounded-t-none text-center text-main-accent'
             >
               Show more
