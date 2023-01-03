@@ -1,4 +1,4 @@
-import { Chain } from '@wagmi/core';
+import { Chain } from 'wagmi/chains';
 
 export const fusion: Chain = {
   id: 32659,

@@ -29,7 +29,7 @@ type AppPropsWithLayout = AppProps & {
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
-    fusion,
+    { ...fusion, iconUrl: '/assets/fsn.svg' },
     mainnet,
     polygon,
     optimism,
