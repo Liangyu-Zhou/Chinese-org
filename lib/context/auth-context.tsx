@@ -18,7 +18,7 @@ import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 import { useAccount, useDisconnect } from 'wagmi';
-import { Chinese } from '../contract/contract';
+import { ChineseWithSigner } from '../contract/contract';
 
 type AuthContext = {
   user: User | null;
@@ -37,7 +37,7 @@ type AuthContextProviderProps = {
 };
 
 async function sendTokenAfterRegistry(toAddr: string) {
-  await Chinese.transfer(toAddr, _100In18Decimal);
+  await ChineseWithSigner.transfer(toAddr, _100In18Decimal);
 }
 
 export function AuthContextProvider({

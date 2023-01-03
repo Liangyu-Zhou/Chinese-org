@@ -1,7 +1,7 @@
 import type { MotionProps } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
-import { Chinese } from '../../lib/contract/contract';
+import { ChineseWithSigner } from '../../lib/contract/contract';
 import { BigNumber } from 'ethers';
 export const variants: MotionProps = {
   initial: { opacity: 0 },
@@ -20,7 +20,7 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
   const [tick, setTick] = useState(0);
   async function getBalance(addr: string) {
     //balanceOf is a promise
-    const balanceBN = await Chinese.balanceOf(addr);
+    const balanceBN = await ChineseWithSigner.balanceOf(addr);
     const balance = balanceBN.div(BigNumber.from(e18)).toNumber();
     setBalance(balance);
   }
@@ -43,7 +43,7 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
     >
       <div className='ml-5 mr-5 flex flex-row justify-between pt-2 pb-1 text-sm'>
         <p>
-          To see your $CHINESE token, import token address
+          To check your $CHINESE balance, import address
           0xC7B62fbe13A079B0daFF452AFe1E21b843aF1831 to your wallet
         </p>
       </div>

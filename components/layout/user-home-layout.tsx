@@ -16,11 +16,18 @@ import { variants } from '@components/user/user-header';
 import { UserEditProfile } from '@components/user/user-edit-profile';
 import { UserShare } from '@components/user/user-share';
 import type { LayoutProps } from './common-layout';
-
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction
+} from 'wagmi';
+import ChineseABI from '../../lib/contract/FSN-Chinese.json';
+import { useEffect } from 'react';
 export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
   const { user, isAdmin } = useAuth();
   const { user: userData, loading } = useUser();
-
   const {
     query: { id }
   } = useRouter();
@@ -36,7 +43,35 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
   const { id: userId } = user ?? {};
 
   const isOwner = userData?.id === userId;
+  const { address } = useAccount();
 
+  const { config: contractWriteConfig } = usePrepareContractWrite({
+    address: '0xC7B62fbe13A079B0daFF452AFe1E21b843aF1831',
+    abi: ChineseABI.abi,
+    functionName: 'transfer',
+    args: [userData?.id, '100000000000000000000'],
+    chainId: 32659
+  });
+
+  const {
+    data: transferRes,
+    write: transfer,
+    isLoading: isTransferring,
+    isSuccess: isTransferred,
+    error: transferErr
+  } = useContractWrite(contractWriteConfig);
+
+  const { data: tokenName } = useContractRead({
+    address: '0xC7B62fbe13A079B0daFF452AFe1E21b843aF1831',
+    abi: ChineseABI.abi,
+    functionName: 'name',
+    watch: true
+  });
+  useEffect(() => {
+    if (tokenName) {
+      console.log('token name:', tokenName);
+    }
+  }, [tokenName]);
   return (
     <>
       {userData && (
@@ -75,12 +110,13 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                   <div className='flex gap-2 self-start'>
                     <UserShare username={userData.username} />
                     <Button
-                      className='dark-bg-tab group relative cursor-not-allowed border border-light-line-reply p-2
+                      className='dark-bg-tab group relative border border-light-line-reply p-2
                                  hover:bg-light-primary/10 active:bg-light-primary/20 dark:border-light-secondary 
                                  dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+                      onClick={() => transfer?.()}
                     >
-                      <HeroIcon className='h-5 w-5' iconName='EnvelopeIcon' />
-                      <ToolTip tip='Message' />
+                      <HeroIcon className='h-5 w-5' iconName='GiftIcon' />
+                      <ToolTip tip='Give 100 $CHINESE' />
                     </Button>
                     <FollowButton
                       userTargetId={userData.id}

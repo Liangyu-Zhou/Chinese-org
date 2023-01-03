@@ -1,4 +1,4 @@
-import { Chinese } from '../lib/contract/contract';
+import { ChineseWithSigner } from '../lib/contract/contract';
 import { useState, useEffect } from 'react';
 import { useWindow } from '@lib/context/window-context';
 import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
@@ -90,7 +90,7 @@ export default function Home(): JSX.Element {
   const _100In18Decimal = '100000000000000000000';
   async function sendTokenAfterTask() {
     if (address) {
-      await Chinese.transfer(address, _100In18Decimal);
+      await ChineseWithSigner.transfer(address, _100In18Decimal);
     }
   }
 
