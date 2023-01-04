@@ -8,6 +8,7 @@ import { MainContainer } from '@components/home/main-container';
 import { Input } from '@components/input/input';
 import { MainHeader } from '@components/home/main-header';
 import type { ReactElement, ReactNode } from 'react';
+import { UpdateUsername } from '../components/home/update-username';
 import Switch from 'react-switch';
 
 import { useAccount } from 'wagmi';
@@ -128,7 +129,7 @@ export default function Home(): JSX.Element {
         title='Home'
         className='flex items-center justify-between'
       >
-        {/* <UpdateUsername /> username is wallet address, can't change */}
+        <UpdateUsername />
       </MainHeader>
       {!isMobile && <Input />}
       <section className='mt-0.5 grid h-[500px] grid-cols-2 grid-rows-2 gap-4 bg-main-sidebar-background xs:mt-0'>
