@@ -88,7 +88,7 @@ export function Sidebar(): JSX.Element {
                    xs:bg-transparent xs:px-2 xs:py-3 xs:pt-2 md:px-4 xl:w-72'
       >
         <section className='flex flex-col justify-center gap-2 xs:items-center xl:items-stretch'>
-          <h1 className='hidden xs:flex'>
+          <h1 className='hidden xl:flex'>
             <Link href='/home'>
               <a
                 className='custom-button main-tab text-accent-blue transition hover:bg-light-primary/10 
