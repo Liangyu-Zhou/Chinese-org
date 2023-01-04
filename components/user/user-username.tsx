@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import cn from 'clsx';
+import { minifyName } from '../../lib/utils';
 
 type UserUsernameProps = {
   username: string;
@@ -22,7 +23,7 @@ export function UserUsername({
         )}
         tabIndex={-1}
       >
-        @{username}
+        @{minifyName(username)}
       </a>
     </Link>
   );

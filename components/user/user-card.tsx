@@ -6,6 +6,7 @@ import { UserName } from './user-name';
 import { UserFollowing } from './user-following';
 import { UserUsername } from './user-username';
 import type { User } from '@lib/types/user';
+import { minifyName } from '../../lib/utils';
 
 type UserCardProps = User & {
   modal?: boolean;
@@ -16,7 +17,6 @@ export function UserCard(user: UserCardProps): JSX.Element {
   const { id, bio, name, modal, follow, username, verified, photoURL } = user;
 
   return (
-    // <Link href={`/user/${username}`}>
     <div
       className='accent-tab hover-animation grid grid-cols-[auto,1fr] gap-3 px-4
                    py-3 hover:bg-light-primary/5 dark:hover:bg-dark-primary/5'
@@ -31,7 +31,7 @@ export function UserCard(user: UserCardProps): JSX.Element {
               <UserName
                 className='-mb-1'
                 name={name}
-                username={username}
+                username={minifyName(username)}
                 verified={verified}
               />
             </UserTooltip>
@@ -47,6 +47,5 @@ export function UserCard(user: UserCardProps): JSX.Element {
         {follow && bio && <p className='whitespace-normal'>{bio}</p>}
       </div>
     </div>
-    // </Link>
   );
 }

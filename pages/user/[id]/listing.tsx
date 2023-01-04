@@ -1,9 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
-import { query, where } from 'firebase/firestore';
+import { doc, query, where, orderBy } from 'firebase/firestore';
 import { useCollection } from '@lib/hooks/useCollection';
+import { useDocument } from '@lib/hooks/useDocument';
 import { tweetsCollection } from '@lib/firebase/collections';
 import { useUser } from '@lib/context/user-context';
-import { mergeData } from '@lib/merge';
 import { UserLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { MainLayout } from '@components/layout/main-layout';
 import { SEO } from '@components/common/seo';
@@ -12,51 +12,61 @@ import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { Tweet } from '@components/tweet/tweet';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
+import { TweetWithParent } from '@components/tweet/tweet-with-parent';
+import { minifyName } from '../../../lib/utils';
+
 import type { ReactElement, ReactNode } from 'react';
 
-export default function UserMedia(): JSX.Element {
+export default function UserWithReplies(): JSX.Element {
   const { user } = useUser();
 
-  const { id, name, username } = user ?? {};
+  const { id, name, username, pinnedTweet } = user ?? {};
+
+  const { data: pinnedData } = useDocument(
+    doc(tweetsCollection, pinnedTweet ?? 'null'),
+    {
+      disabled: !pinnedTweet,
+      allowNull: true,
+      includeUser: true
+    }
+  );
 
   const { data, loading } = useCollection(
     query(
       tweetsCollection,
       where('createdBy', '==', id),
-      where('images', '!=', null)
+      orderBy('createdAt', 'desc')
     ),
     { includeUser: true, allowNull: true }
   );
 
-  const sortedTweets = mergeData(true, data);
-
   return (
     <section>
       <SEO
-        title={`Media Tweets by ${name as string} (@${
+        title={`Tweets with replies by ${name as string} (@${
           username as string
         }) / Twitter`}
       />
       {loading ? (
         <Loading className='mt-5' />
-      ) : !sortedTweets ? (
+      ) : !data ? (
         <StatsEmpty
-          title={`@${username as string} hasn't Tweeted Media`}
-          description='Once they do, those Tweets will show up here.'
-          imageData={{ src: '/assets/no-media.png', alt: 'No media' }}
+          title={`@${minifyName(username as string)} has no listing NFTs`}
+          description='When they do, their Listing NFTs will show up here.'
         />
       ) : (
         <AnimatePresence mode='popLayout'>
-          {sortedTweets.map((tweet) => (
-            <Tweet {...tweet} key={tweet.id} />
-          ))}
+          {pinnedData && (
+            <Tweet pinned {...pinnedData} key={`pinned-${pinnedData.id}`} />
+          )}
+          <TweetWithParent data={data} />
         </AnimatePresence>
       )}
     </section>
   );
 }
 
-UserMedia.getLayout = (page: ReactElement): ReactNode => (
+UserWithReplies.getLayout = (page: ReactElement): ReactNode => (
   <ProtectedLayout>
     <MainLayout>
       <UserLayout>

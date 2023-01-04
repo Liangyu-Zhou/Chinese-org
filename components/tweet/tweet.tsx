@@ -18,6 +18,7 @@ import { TweetDate } from './tweet-date';
 import type { Variants } from 'framer-motion';
 import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
+import { minifyName } from '../../lib/utils';
 
 export type TweetProps = Tweet & {
   user: User;
@@ -133,7 +134,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                   <UserTooltip modal={modal} {...tweetUserData}>
                     <UserName
                       name={name}
-                      username={username}
+                      username={minifyName(username)}
                       verified={verified}
                       className='text-light-primary dark:text-dark-primary'
                     />

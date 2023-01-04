@@ -18,6 +18,7 @@ import { Input } from '@components/input/input';
 import type { RefObject } from 'react';
 import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
+import { minifyName } from '../../lib/utils';
 
 type ViewTweetProps = Tweet & {
   user: User;
@@ -91,7 +92,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
                 <UserName
                   className='-mb-1'
                   name={name}
-                  username={username}
+                  username={minifyName(username)}
                   verified={verified}
                 />
               </UserTooltip>

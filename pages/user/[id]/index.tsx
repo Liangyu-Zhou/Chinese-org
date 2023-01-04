@@ -12,6 +12,7 @@ import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import { Loading } from '@components/ui/loading';
 import { Tweet } from '@components/tweet/tweet';
+import { minifyName } from '../../../lib/utils';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function UserTweets(): JSX.Element {
@@ -53,8 +54,8 @@ export default function UserTweets(): JSX.Element {
         <Loading className='mt-5' />
       ) : !mergedTweets ? (
         <StatsEmpty
-          title={`@${username as string} hasn't tweeted`}
-          description='When they do, their Tweets will show up here.'
+          title={`@${minifyName(username as string)} has no NFTs`}
+          description='When they do, their NFTs will show up here.'
         />
       ) : (
         <AnimatePresence mode='popLayout'>

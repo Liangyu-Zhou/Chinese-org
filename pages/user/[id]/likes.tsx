@@ -11,6 +11,8 @@ import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { Tweet } from '@components/tweet/tweet';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
+import { minifyName } from '../../../lib/utils';
+
 import type { ReactElement, ReactNode } from 'react';
 
 export default function UserLikes(): JSX.Element {
@@ -38,7 +40,7 @@ export default function UserLikes(): JSX.Element {
         <Loading className='mt-5' />
       ) : !data ? (
         <StatsEmpty
-          title={`@${username as string} hasn't liked any Tweets`}
+          title={`@${minifyName(username as string)} hasn't liked any Tweets`}
           description='When they do, those Tweets will show up here.'
         />
       ) : (

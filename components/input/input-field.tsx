@@ -1,4 +1,5 @@
 import cn from 'clsx';
+import { useEffect } from 'react';
 import type { User, EditableData } from '@lib/types/user';
 import type { KeyboardEvent, ChangeEvent } from 'react';
 
@@ -32,7 +33,6 @@ export function InputField({
 
   const inputLength = slicedInputValue.length;
   const isHittingInputLimit = inputLimit && inputLength > inputLimit;
-
   return (
     <div className='flex flex-col gap-1'>
       <div
@@ -41,7 +41,7 @@ export function InputField({
           errorMessage
             ? 'ring-accent-red'
             : `ring-light-line-reply focus-within:ring-2 
-                 focus-within:!ring-main-accent dark:ring-dark-border`
+                 focus-within:!ring-accent-blue dark:ring-dark-border`
         )}
       >
         {useTextArea ? (
@@ -75,7 +75,7 @@ export function InputField({
              dark:text-dark-secondary`,
             errorMessage
               ? '!text-accent-red peer-focus:text-accent-red'
-              : 'peer-focus:text-main-accent'
+              : 'peer-focus:text-black'
           )}
           htmlFor={inputId}
         >

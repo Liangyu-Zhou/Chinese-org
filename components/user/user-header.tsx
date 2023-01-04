@@ -7,6 +7,7 @@ import { isPlural } from '@lib/utils';
 import { userStatsCollection } from '@lib/firebase/collections';
 import { UserName } from './user-name';
 import type { Variants } from 'framer-motion';
+import { minifyName } from '../../lib/utils';
 
 export const variants: Variants = {
   initial: { opacity: 0 },
@@ -72,7 +73,7 @@ export function UserHeader(): JSX.Element {
           />
           <p className='text-xs text-light-secondary dark:text-dark-secondary'>
             {isInFollowPage
-              ? `@${user.username}`
+              ? `@${minifyName(user.username)}`
               : isInTweetPage
               ? totalTweets
                 ? `${totalTweets} ${`Tweet${isPlural(totalTweets)}`}`

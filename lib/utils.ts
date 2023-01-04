@@ -45,3 +45,12 @@ export function getStatsMove(movePixels: number): MotionProps {
 export function isPlural(count: number): string {
   return count > 1 ? 's' : '';
 }
+
+export function minifyName(name: string): string {
+  if (name.length < 16) {
+    return name;
+  }
+  const start = name.substring(0, 5);
+  const end = name.substring(name.length - 4);
+  return `${start}...${end}`;
+}

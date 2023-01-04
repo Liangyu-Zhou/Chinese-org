@@ -12,6 +12,7 @@ import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
 import { variants } from './more-settings';
+import { minifyName } from '../../lib/utils';
 import type { User } from '@lib/types/user';
 
 export function SidebarProfile(): JSX.Element {
@@ -51,7 +52,7 @@ export function SidebarProfile(): JSX.Element {
                 <UserAvatar src={photoURL} alt={name} size={40} />
                 <div className='hidden truncate text-start leading-5 xl:block'>
                   <UserName name={name} className='start' verified={verified} />
-                  <UserUsername username={username} disableLink />
+                  <UserUsername username={minifyName(username)} disableLink />
                 </div>
               </div>
               <HeroIcon
@@ -77,7 +78,10 @@ export function SidebarProfile(): JSX.Element {
                       <UserAvatar src={photoURL} alt={name} />
                       <div className='truncate'>
                         <UserName name={name} verified={verified} />
-                        <UserUsername username={username} disableLink />
+                        <UserUsername
+                          username={minifyName(username)}
+                          disableLink
+                        />
                       </div>
                     </div>
                     <i>
@@ -97,7 +101,7 @@ export function SidebarProfile(): JSX.Element {
                         onClick={openModal}
                       >
                         <HeroIcon iconName='ArrowRightOnRectangleIcon' />
-                        Log out @{username}
+                        Log out @{minifyName(username)}
                       </Button>
                     )}
                   </Menu.Item>

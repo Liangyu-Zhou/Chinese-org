@@ -19,6 +19,7 @@ import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ChineseWithSigner } from '../contract/contract';
+import { minifyName } from '../../lib/utils';
 
 type AuthContext = {
   user: User | null;
@@ -58,7 +59,7 @@ export function AuthContextProvider({
         const userData: WithFieldValue<User> = {
           id: address,
           bio: null,
-          name: address,
+          name: minifyName(address),
           theme: null,
           accent: null,
           website: null,
