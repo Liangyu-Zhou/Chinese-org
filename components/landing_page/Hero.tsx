@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Hero1 from '../../assets/hero1.jpg';
+import Hero1 from '/public/assets/hero/hero1.webp';
 const Hero = () => {
   const [url, setUrl] = useState(Hero1);
 
