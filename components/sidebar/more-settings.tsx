@@ -35,17 +35,17 @@ export function MoreSettings(): JSX.Element {
       <Menu className='relative' as='div'>
         {({ open }): JSX.Element => (
           <>
-            <Menu.Button className='group relative flex w-full py-1 outline-none'>
+            <Menu.Button className='group relative flex w-full outline-none'>
               <div
                 className={cn(
-                  `custom-button flex gap-4 text-xl transition group-hover:bg-light-primary/10 group-focus-visible:ring-2
+                  `custom-button flex gap-4 text-lg transition group-hover:bg-light-primary/10 group-focus-visible:ring-2
                    group-focus-visible:ring-[#878a8c] dark:group-hover:bg-dark-primary/10 dark:group-focus-visible:ring-white
-                   xl:pr-5`,
+                   xs:p-2  xl:pr-5`,
                   open && 'bg-light-primary/10 dark:bg-dark-primary/10'
                 )}
               >
                 <HeroIcon
-                  className='h-7 w-7'
+                  className='h-6 w-6'
                   iconName='EllipsisHorizontalCircleIcon'
                 />{' '}
                 <p className='hidden xl:block'>More</p>

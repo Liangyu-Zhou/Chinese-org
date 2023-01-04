@@ -44,13 +44,13 @@ const navLinks: Readonly<NavLink[]> = [
     iconName: 'EnvelopeIcon',
     disabled: true
   },
-  {
-    href: '/bookmarks',
-    linkName: 'Bookmarks',
-    iconName: 'BookmarkIcon',
-    canBeHidden: true,
-    disabled: true
-  },
+  // {
+  //   href: '/bookmarks',
+  //   linkName: 'Bookmarks',
+  //   iconName: 'BookmarkIcon',
+  //   canBeHidden: true,
+  //   disabled: true
+  // },
   {
     href: '/lists',
     linkName: 'Lists',
@@ -83,8 +83,8 @@ export function Sidebar(): JSX.Element {
         <Input modal closeModal={closeModal} />
       </Modal>
       <div
-        className='fixed bottom-0 z-10 flex w-full flex-col justify-between border-t border-light-border 
-                   bg-main-background py-0 dark:border-dark-border xs:top-0 xs:h-full xs:w-auto xs:border-0 
+        className='fixed bottom-0 z-10 flex w-full flex-col justify-between overflow-y-auto border-t 
+                   border-light-border bg-main-background py-0 dark:border-dark-border xs:top-0 xs:h-full xs:w-auto xs:border-0 
                    xs:bg-transparent xs:px-2 xs:py-3 xs:pt-2 md:px-4 xl:w-72'
       >
         <section className='flex flex-col justify-center gap-2 xs:items-center xl:items-stretch'>
