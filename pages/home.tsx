@@ -10,7 +10,7 @@ import { MainHeader } from '@components/home/main-header';
 import type { ReactElement, ReactNode } from 'react';
 import { UpdateUsername } from '../components/home/update-username';
 import Switch from 'react-switch';
-
+import { RedPack } from '@components/home/readpack';
 import { useAccount } from 'wagmi';
 import {
   doc,
@@ -132,7 +132,10 @@ export default function Home(): JSX.Element {
         <UpdateUsername />
       </MainHeader>
       {!isMobile && <Input />}
-      <section className='mt-0.5 grid h-[500px] grid-cols-2 grid-rows-2 gap-4 bg-main-sidebar-background xs:mt-0'>
+      <section className='mt-0.5 grid h-[800px] grid-cols-2 grid-rows-2 gap-4 bg-main-sidebar-background xs:mt-0'>
+        <div id='redpack'>
+          <RedPack></RedPack>
+        </div>
         <button
           className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
           onClick={SetFollowOnTwitter}
@@ -198,7 +201,7 @@ export default function Home(): JSX.Element {
           ></Switch>
         </button>
 
-        <button
+        {/* <button
           className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
           onClick={SetSubscribeEmail}
         >
@@ -217,7 +220,7 @@ export default function Home(): JSX.Element {
             onChange={setChecked}
             checked={subscribeEmail}
           ></Switch>
-        </button>
+        </button> */}
 
         {/* {loading ? (
           <Loading className='mt-5' />

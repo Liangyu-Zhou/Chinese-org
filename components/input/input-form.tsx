@@ -135,7 +135,7 @@ export function InputForm({
                        hover:bg-main-accent/10 active:bg-main-accent/20 dark:border-light-secondary'
             {...fromTop}
           >
-            <p className='font-bold'>Only subscribers</p>
+            <p className='font-bold'>Everyone</p>
             <HeroIcon className='h-4 w-4' iconName='ChevronDownIcon' />
           </motion.button>
         )}
@@ -179,7 +179,7 @@ export function InputForm({
                        px-3 text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20'
           >
             <HeroIcon className='h-4 w-4' iconName='GlobeAmericasIcon' />
-            <p className='font-bold'>Only subscribers can see this</p>
+            <p className='font-bold'>Everyone can see</p>
           </button>
         </motion.div>
       )}
