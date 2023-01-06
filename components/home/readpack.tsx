@@ -1,7 +1,7 @@
 export function RedPack() {
   return (
     <>
-      <div className='m-0 flex h-full w-full flex-col items-center rounded-xl bg-[#A5423A] '>
+      <div className='m-10% flex h-full w-full flex-col items-center rounded-xl bg-[#A5423A] '>
         {/* <!--  红包的顶部盖子 --> */}
         <div className='m-0 h-[25%] w-full  rounded-xl rounded-b-[50px] border border-[#BD503A]  bg-[#BD503A] shadow-xl'></div>
         {/* <!-- 拆红包的按钮 --> */}
