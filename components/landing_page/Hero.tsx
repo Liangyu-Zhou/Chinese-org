@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Hero1 from '/public/assets/hero/hero1.webp';
+import Hero1 from '/public/assets/landingpage/hero/hero1.webp';
 const Hero = () => {
   const [url, setUrl] = useState(Hero1);
 
