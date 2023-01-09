@@ -10,8 +10,14 @@ import { MainHeader } from '@components/home/main-header';
 import type { ReactElement, ReactNode } from 'react';
 import { UpdateUsername } from '../components/home/update-username';
 import Switch from 'react-switch';
-import { RedPack } from '@components/home/readpack';
 import { useAccount } from 'wagmi';
+import { HeroIcon } from '@components/ui/hero-icon';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Button } from '@components/ui/button';
+// import { Tooltip } from 'react-tooltip'
+import { ToolTip as MyTooltip } from '@components/ui/tooltip';
+import ToolTip from 'rc-tooltip';
+
 import {
   doc,
   getDoc,
@@ -114,13 +120,33 @@ export default function Home(): JSX.Element {
         setSubscribeEmail(true);
       }
     };
+    const calculateCode = (address: string) => {
+      return (
+        address[2] +
+        address[9] +
+        address[17] +
+        address[25] +
+        address[33] +
+        address[41]
+      );
+    };
 
+    const setUserReferralLinks = (address: string) => {
+      const code = calculateCode(address);
+      const url = 'http://localhost:3000/?referralcode=' + code;
+      setRefferalLink(url);
+    };
     if (address) {
       void setTask(address);
+      setRefferalCode(calculateCode(address));
+      setUserReferralLinks(address);
     }
   }, [address]);
 
   const [checked, setChecked] = useState(false);
+  const [referralCode, setRefferalCode] = useState('');
+  const [referralLink, setRefferalLink] = useState('');
+  const [copied, setCopied] = useState(false);
   return (
     <MainContainer>
       <SEO title='Home / Chinese.org' />
@@ -132,97 +158,152 @@ export default function Home(): JSX.Element {
         <UpdateUsername />
       </MainHeader>
       {!isMobile && <Input />}
-      <section className='mt-0.5 grid h-[800px] grid-cols-2 grid-rows-2 gap-4 bg-main-sidebar-background xs:mt-0'>
-        <div id='redpack'>
-          <RedPack></RedPack>
+      <section className='bg-main-sidebar-background'>
+        <div className='m-3 flex flex-col rounded-xl bg-white shadow-lg hover:shadow-xl'>
+          <div className='flex items-center justify-center pt-3'>
+            <HeroIcon
+              className='h-6 w-6 text-[#f26c4f]'
+              iconName='ShareIcon'
+              solid={true}
+            />
+            <p
+              className='pl-2 text-2xl text-[#ff7235]'
+              id='invite'
+              data-tooltip-content='hello world'
+            >
+              Invite Chinese Compatriots
+            </p>
+          </div>
+          <div className='flex flex-wrap items-center p-5'>
+            <span className='pr-1 '>Share your referral code</span>
+            <span className='text-[#ff7235]'>{referralCode}</span>
+            <CopyToClipboard text={referralCode} onCopy={() => setCopied(true)}>
+              <Button
+                className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
+                   active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
+                   dark:active:bg-dark-primary/20'
+              >
+                <HeroIcon
+                  className='h-4 w-4'
+                  iconName='ClipboardDocumentIcon'
+                  solid={false}
+                />
+                <MyTooltip tip='Copy' />
+              </Button>
+            </CopyToClipboard>
+            <p className='pr-2'>or</p>
+            <a href={referralLink} className='text-[#ff7235] hover:underline'>
+              invitation link
+            </a>
+            <CopyToClipboard text={referralLink} onCopy={() => setCopied(true)}>
+              <Button
+                className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
+                   active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
+                   dark:active:bg-dark-primary/20'
+              >
+                <HeroIcon
+                  className='h-4 w-4'
+                  iconName='ClipboardDocumentIcon'
+                  solid={false}
+                />
+                <MyTooltip tip='Copy' />
+              </Button>
+            </CopyToClipboard>
+            <span className='pr-1 '>To claim</span>
+            <span className='pr-1 '>50,000</span>
+            <span className='pr-1 '>$CHINESE</span>
+            <span className='pr-1 '>for every new user</span>
+          </div>
         </div>
-        <button
-          className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
-          onClick={SetFollowOnTwitter}
-          disabled={followOnTwitter}
-        >
-          <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task1</h1>
-          <div className='flex flex-row'>
-            <p className=' mr-2 font-mono italic'>Follow Chinese.org on</p>
-            <img
-              className='mr-4 w-[30px] rounded'
-              src='/assets/twitter-avatar.jpg'
-            ></img>
-          </div>
-          <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
-          <Switch
-            className='mt-10 ml-[-10px]'
-            uncheckedIcon={false}
-            onChange={setChecked}
-            checked={followOnTwitter}
-          ></Switch>
-        </button>
 
-        <button
-          className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
-          onClick={SetJoinTelegram}
-          disabled={joinTelegram}
-        >
-          <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task2</h1>
-          <div className='flex flex-row'>
-            <p className=' mr-2 font-mono italic'>Join Chinese.org in</p>
-            <img
-              className='mr-4 w-[30px] rounded'
-              src='/assets/telegram.png'
-            ></img>
-          </div>
-          <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
-          <Switch
-            className='mt-10 ml-[-10px]'
-            uncheckedIcon={false}
-            onChange={setChecked}
-            checked={joinTelegram}
-          ></Switch>
-        </button>
+        <div className='mt-0.5 grid h-[600px] grid-cols-2 grid-rows-2 gap-2 bg-main-sidebar-background xs:mt-0'>
+          <button
+            className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
+            onClick={SetFollowOnTwitter}
+            disabled={followOnTwitter}
+          >
+            <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task1</h1>
+            <div className='flex flex-row'>
+              <p className=' mr-2 font-mono italic'>Follow Chinese.org on</p>
+              <img
+                className='mr-4 w-[30px] rounded'
+                src='/assets/twitter-avatar.jpg'
+              ></img>
+            </div>
+            <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
+            <Switch
+              className='mt-10 ml-[-10px]'
+              uncheckedIcon={false}
+              onChange={setChecked}
+              checked={followOnTwitter}
+            ></Switch>
+          </button>
 
-        <button
-          className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
-          onClick={SetJoinDiscord}
-        >
-          <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task3</h1>
-          <div className='flex flex-row'>
-            <p className=' mr-2 font-mono italic'>Join Chinese.org in</p>
-            <img
-              className='mr-4 w-[30px] rounded'
-              src='/assets/discord.png'
-            ></img>
-          </div>
-          <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
-          <Switch
-            className='mt-10 ml-[-10px]'
-            uncheckedIcon={false}
-            onChange={setChecked}
-            checked={joinDiscord}
-          ></Switch>
-        </button>
+          <button
+            className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
+            onClick={SetJoinTelegram}
+            disabled={joinTelegram}
+          >
+            <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task2</h1>
+            <div className='flex flex-row'>
+              <p className=' mr-2 font-mono italic'>Join Chinese.org in</p>
+              <img
+                className='mr-4 w-[30px] rounded'
+                src='/assets/telegram.png'
+              ></img>
+            </div>
+            <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
+            <Switch
+              className='mt-10 ml-[-10px]'
+              uncheckedIcon={false}
+              onChange={setChecked}
+              checked={joinTelegram}
+            ></Switch>
+          </button>
 
-        {/* <button
-          className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
-          onClick={SetSubscribeEmail}
-        >
-          <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task4</h1>
-          <div className='flex flex-row'>
-            <p className='mr-2 font-mono italic'>Subscribe newsletter</p>
-            <img
-              className='mr-4 w-[30px] rounded'
-              src='/assets/email.png'
-            ></img>
-          </div>
-          <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
-          <Switch
-            className='mt-10 ml-[-10px]'
-            uncheckedIcon={false}
-            onChange={setChecked}
-            checked={subscribeEmail}
-          ></Switch>
-        </button> */}
+          <button
+            className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
+            onClick={SetJoinDiscord}
+          >
+            <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task3</h1>
+            <div className='flex flex-row'>
+              <p className=' mr-2 font-mono italic'>Join Chinese.org in</p>
+              <img
+                className='mr-4 w-[30px] rounded'
+                src='/assets/discord.png'
+              ></img>
+            </div>
+            <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
+            <Switch
+              className='mt-10 ml-[-10px]'
+              uncheckedIcon={false}
+              onChange={setChecked}
+              checked={joinDiscord}
+            ></Switch>
+          </button>
 
-        {/* {loading ? (
+          <button
+            className="ml-1 flex flex-col items-center bg-[url('/assets/memo3.jpg')] bg-contain bg-no-repeat"
+            onClick={SetSubscribeEmail}
+          >
+            <h1 className='mt-7 mb-5 font-mono text-2xl italic'>Task4</h1>
+            <div className='flex flex-row'>
+              <p className='mr-2 font-mono italic'>Subscribe newsletter</p>
+              <img
+                className='mr-4 w-[30px] rounded'
+                src='/assets/email.png'
+              ></img>
+            </div>
+            <p className='mt-4 font-mono italic'>to get 100 $CHINESE token !</p>
+            <Switch
+              className='mt-10 ml-[-10px]'
+              uncheckedIcon={false}
+              onChange={setChecked}
+              checked={subscribeEmail}
+            ></Switch>
+          </button>
+
+          {/* {loading ? (
           <Loading className='mt-5' />
         ) : !data ? (
           <Error message='Something went wrong' />
@@ -236,6 +317,7 @@ export default function Home(): JSX.Element {
             <LoadMore />
           </>
         )} */}
+        </div>
       </section>
     </MainContainer>
   );

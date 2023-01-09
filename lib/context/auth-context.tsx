@@ -20,6 +20,7 @@ import type { Stats } from '@lib/types/stats';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ChineseWithSigner } from '../contract/contract';
 import { minifyName } from '../../lib/utils';
+import { BigNumber } from 'ethers';
 
 type AuthContext = {
   user: User | null;
@@ -29,6 +30,8 @@ type AuthContext = {
   randomSeed: string;
   userBookmarks: Bookmark[] | null;
   signOut: () => void;
+  referralCode: string;
+  setReferralCode: (arg: string) => void;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -74,7 +77,8 @@ export function AuthContextProvider({
           totalTweets: 0,
           totalPhotos: 0,
           pinnedTweet: null,
-          coverPhotoURL: null
+          coverPhotoURL: null,
+          referralCode: referralCode
         };
 
         const userStatsData: WithFieldValue<Stats> = {
@@ -84,7 +88,8 @@ export function AuthContextProvider({
           taskFollowOnTwitter: false,
           taskJoinDiscord: false,
           taskJoinTelegram: false,
-          taskSubscribeEmail: false
+          taskSubscribeEmail: false,
+          balance: BigNumber.from('1000000')
         };
 
         try {
@@ -144,7 +149,7 @@ export function AuthContextProvider({
   };
   const isAdmin = false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
-
+  const [referralCode, setReferralCode] = useState('');
   const value: AuthContext = {
     user,
     error,
@@ -152,7 +157,9 @@ export function AuthContextProvider({
     isAdmin,
     randomSeed,
     userBookmarks,
-    signOut
+    signOut,
+    referralCode,
+    setReferralCode
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

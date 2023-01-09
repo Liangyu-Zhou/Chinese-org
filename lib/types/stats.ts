@@ -1,5 +1,5 @@
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
-
+import type { BigNumber } from 'ethers';
 export type Stats = {
   likes: string[];
   tweets: string[];
@@ -8,6 +8,7 @@ export type Stats = {
   taskJoinTelegram: boolean;
   taskJoinDiscord: boolean;
   taskSubscribeEmail: boolean;
+  balance: BigNumber;
 };
 
 export const statsConverter: FirestoreDataConverter<Stats> = {
