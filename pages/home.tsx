@@ -14,9 +14,8 @@ import { useAccount } from 'wagmi';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button } from '@components/ui/button';
-// import { Tooltip } from 'react-tooltip'
+import { toast } from 'react-hot-toast';
 import { ToolTip as MyTooltip } from '@components/ui/tooltip';
-import ToolTip from 'rc-tooltip';
 
 import {
   doc,
@@ -24,7 +23,11 @@ import {
   updateDoc,
   onSnapshot,
   serverTimestamp,
-  WithFieldValue
+  WithFieldValue,
+  query,
+  where,
+  limit,
+  getDocs
 } from 'firebase/firestore';
 import {
   usersCollection,
@@ -32,6 +35,7 @@ import {
   userBookmarksCollection
 } from '@lib/firebase/collections';
 import type { Stats } from '@lib/types/stats';
+import { calculateCode } from '@lib/utils';
 
 export default function Home(): JSX.Element {
   const { isMobile } = useWindow();
@@ -120,16 +124,6 @@ export default function Home(): JSX.Element {
         setSubscribeEmail(true);
       }
     };
-    const calculateCode = (address: string) => {
-      return (
-        address[2] +
-        address[9] +
-        address[17] +
-        address[25] +
-        address[33] +
-        address[41]
-      );
-    };
 
     const setUserReferralLinks = (address: string) => {
       const code = calculateCode(address);
@@ -177,7 +171,13 @@ export default function Home(): JSX.Element {
           <div className='flex flex-wrap items-center p-5'>
             <span className='pr-1 '>Share your referral code</span>
             <span className='text-[#ff7235]'>{referralCode}</span>
-            <CopyToClipboard text={referralCode} onCopy={() => setCopied(true)}>
+            <CopyToClipboard
+              text={referralCode}
+              onCopy={() => {
+                setCopied(true);
+                toast.success('Copied to clipboard');
+              }}
+            >
               <Button
                 className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
                    active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
@@ -195,7 +195,13 @@ export default function Home(): JSX.Element {
             <a href={referralLink} className='text-[#ff7235] hover:underline'>
               invitation link
             </a>
-            <CopyToClipboard text={referralLink} onCopy={() => setCopied(true)}>
+            <CopyToClipboard
+              text={referralLink}
+              onCopy={() => {
+                setCopied(true);
+                toast.success('Copied to clipboard');
+              }}
+            >
               <Button
                 className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
                    active:bg-light-primary/20 dark:hover:bg-dark-primary/10 

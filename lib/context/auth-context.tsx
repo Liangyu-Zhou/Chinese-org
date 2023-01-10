@@ -20,7 +20,8 @@ import type { Stats } from '@lib/types/stats';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ChineseWithSigner } from '../contract/contract';
 import { minifyName } from '../../lib/utils';
-import { BigNumber } from 'ethers';
+import BigNumber from 'bignumber.js';
+import { calculateCode } from '@lib/utils';
 
 type AuthContext = {
   user: User | null;
@@ -30,12 +31,12 @@ type AuthContext = {
   randomSeed: string;
   userBookmarks: Bookmark[] | null;
   signOut: () => void;
-  referralCode: string;
-  setReferralCode: (arg: string) => void;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
 const _100In18Decimal = '100000000000000000000';
+const _1mIn18Decimal = '1000000000000000000000000';
+const _1m = '1000000';
 type AuthContextProviderProps = {
   children: ReactNode;
 };
@@ -47,6 +48,7 @@ async function sendTokenAfterRegistry(toAddr: string) {
 export function AuthContextProvider({
   children
 }: AuthContextProviderProps): JSX.Element {
+  const BN = BigNumber.clone({ DECIMAL_PLACES: 18 });
   const [user, setUser] = useState<User | null>(null);
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -78,7 +80,7 @@ export function AuthContextProvider({
           totalPhotos: 0,
           pinnedTweet: null,
           coverPhotoURL: null,
-          referralCode: referralCode
+          referralCode: calculateCode(address)
         };
 
         const userStatsData: WithFieldValue<Stats> = {
@@ -89,9 +91,9 @@ export function AuthContextProvider({
           taskJoinDiscord: false,
           taskJoinTelegram: false,
           taskSubscribeEmail: false,
-          balance: BigNumber.from('1000000')
+          balance: BN(_1m).toString()
         };
-
+        console.log(userStatsData);
         try {
           await Promise.all([
             setDoc(doc(usersCollection, address), userData),
@@ -149,7 +151,6 @@ export function AuthContextProvider({
   };
   const isAdmin = false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
-  const [referralCode, setReferralCode] = useState('');
   const value: AuthContext = {
     user,
     error,
@@ -157,9 +158,7 @@ export function AuthContextProvider({
     isAdmin,
     randomSeed,
     userBookmarks,
-    signOut,
-    referralCode,
-    setReferralCode
+    signOut
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

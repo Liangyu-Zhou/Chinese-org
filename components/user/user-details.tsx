@@ -88,6 +88,7 @@ export function UserDetails({
                 </div>
               )
           )}
+          <p>userid:{id}</p>
         </div>
       </div>
       <UserFollowStats following={following} followers={followers} />

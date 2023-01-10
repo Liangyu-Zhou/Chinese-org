@@ -1,8 +1,11 @@
+import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { userStatsCollection } from '../../lib/firebase/collections';
 import type { MotionProps } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
-import { ChineseWithSigner } from '../../lib/contract/contract';
-import { BigNumber } from 'ethers';
+import { Button } from '@components/ui/button';
+import BigNumber from 'bignumber.js';
+
 export const variants: MotionProps = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
@@ -13,27 +16,41 @@ type AsideTokensProps = {
   tokenVal?: number;
 };
 const e18 = '1000000000000000000';
-
+const _0001In18Decimal = '1000000000000000';
 export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
+  const BN = BigNumber.clone({ DECIMAL_PLACES: 18 });
   const { address } = useAccount();
-  const [balance, setBalance] = useState(0);
+  const [BNBalance, setBNBalance] = useState(BN(0));
   const [tick, setTick] = useState(0);
-  async function getBalance(addr: string) {
-    //balanceOf is a promise
-    const balanceBN = await ChineseWithSigner.balanceOf(addr);
-    const balance = balanceBN.div(BigNumber.from(e18)).toNumber();
-    setBalance(balance);
+  async function getBalance(addr: string): Promise<string> {
+    const userStatsRef = doc(userStatsCollection(addr), 'stats');
+    const userStats = (await getDoc(userStatsRef)).data();
+    const balance = userStats?.balance ? userStats?.balance : '0';
+    return balance;
   }
+  async function updateBalance(addr: string, newBalance: BigNumber) {
+    const userStatsRef = doc(userStatsCollection(addr), 'stats');
+    await updateDoc(userStatsRef, {
+      balance: newBalance.toString(),
+      updatedAt: serverTimestamp()
+    });
+  }
+
   useEffect(() => {
-    if (address) {
-      void getBalance(address);
+    if (address && BNBalance.isEqualTo(BN(0))) {
+      void getBalance(address).then((balance) => {
+        setBNBalance(BN(balance));
+      });
     }
     const timeoutId = setTimeout(() => {
-      if (address) {
-        void getBalance(address);
+      if (address && tick > 1) {
+        setBNBalance(BNBalance.plus(BN(0.001)));
+        if (tick % 10 == 0) {
+          void updateBalance(address, BNBalance);
+        }
       }
       setTick((tick) => tick + 1);
-    }, 5000);
+    }, 1000);
     return () => clearTimeout(timeoutId);
   }, [tick, address]);
 
@@ -41,22 +58,22 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
     <section
       className={'hover-animation rounded-2xl bg-main-sidebar-background'}
     >
-      <div className='ml-5 mr-5 flex flex-row justify-between pt-2 pb-1 text-sm'>
-        <p>
-          To check your $CHINESE balance, import address
-          0xC7B62fbe13A079B0daFF452AFe1E21b843aF1831 to your wallet
-        </p>
+      <div className='mt-5 flex flex-row justify-between pl-5 pt-1 pb-2'>
+        <p>balance</p>
+      </div>
+      <div className='flex items-end justify-between pl-5 pr-5'>
+        <p className='text-3xl font-bold '>{BNBalance.toFormat(3)}</p>
+        <p>$CHINESE</p>
       </div>
 
-      <div className='ml-5 mr-5 flex flex-row justify-between pt-2 pb-1'>
-        <p>$CHINESE Price</p>
-        <p>≈$0.00000024 USD</p>
-      </div>
-      <div className='ml-5 mr-5 flex flex-row justify-between pt-1 pb-2'>
-        <p>Your $CHINESE</p>
-        <p>
-          {balance}≈${(balance * 0.00000024).toFixed(8)} USD
-        </p>
+      <div className='m-5 flex justify-center gap-4'>
+        <Button
+          className='text-md w-5/12  bg-main-accent py-2
+                       font-bold text-white outline-none transition hover:brightness-90 active:brightness-75'
+          disabled={true}
+        >
+          <p className='block'>Withdraw</p>
+        </Button>
       </div>
     </section>
   );

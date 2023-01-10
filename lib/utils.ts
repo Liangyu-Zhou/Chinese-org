@@ -54,3 +54,7 @@ export function minifyName(name: string): string {
   const end = name.substring(name.length - 4);
   return `${start}...${end}`;
 }
+
+export const calculateCode = (address: string) => {
+  return address.substring(10, 40);
+};

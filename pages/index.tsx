@@ -12,8 +12,8 @@ export default function Login(): JSX.Element {
   const {
     query: { referralcode }
   } = useRouter();
-  const { setReferralCode } = useAuth();
-  setReferralCode(referralcode as string);
+  // const { setReferralCode } = useAuth();
+  // setReferralCode(referralcode as string);
 
   return (
     <div>

@@ -65,6 +65,18 @@ export async function updateUserData(
     updatedAt: serverTimestamp()
   });
 }
+export async function UpdateReferrerBalance(userId: string): Promise<void> {
+  const userStatsRef = doc(userStatsCollection(userId), 'stats');
+  const userStats = (await getDoc(userStatsRef)).data();
+  const balance = userStats?.balance;
+  const newBalance = BigNumber.from(balance).add(
+    BigNumber.from('50000000000000000000000')
+  );
+  await updateDoc(userStatsRef, {
+    balance: newBalance.toString(),
+    updatedAt: serverTimestamp()
+  });
+}
 
 export async function updateUserTheme(
   userId: string,
@@ -83,26 +95,6 @@ export async function updateUsername(
     ...(username && { username }),
     updatedAt: serverTimestamp()
   });
-}
-
-export async function updateReferrerBalance(
-  referralCode?: string
-): Promise<void> {
-  const { docs, empty } = await getDocs(
-    query(usersCollection, where('referralCode', '==', referralCode), limit(1))
-  );
-  if (!empty && docs && docs.at(0) && docs.at(0)?.ref) {
-    const userId = docs.at(0)?.get('id');
-    const balance = docs.at(0)?.get('referralCode');
-    const newBalance = (balance as BigNumber).add(
-      BigNumber.from('50,000,000,000,000,000,000,000')
-    );
-    const userRef = doc(usersCollection, userId);
-    await updateDoc(userRef, {
-      ...{ balance: newBalance },
-      updatedAt: serverTimestamp()
-    });
-  }
 }
 
 export async function managePinnedTweet(

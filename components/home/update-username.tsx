@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 import {
   checkUsernameAvailability,
   updateUsername,
-  updateReferrerBalance,
+  UpdateReferrerBalance,
   checkReferralCodeExsits
 } from '@lib/firebase/utils';
 import { useAuth } from '@lib/context/auth-context';
@@ -18,6 +18,9 @@ import { ToolTip } from '@components/ui/tooltip';
 import { Modal } from '@components/modal/modal';
 import { UsernameModal } from '@components/modal/username-modal';
 import { InputField } from '@components/input/input-field';
+import { usersCollection } from '../../lib/firebase/collections';
+import { useCollection } from '@lib/hooks/useCollection';
+import { query, where } from 'firebase/firestore';
 import type { FormEvent, ChangeEvent } from 'react';
 
 export function UpdateUsername(): JSX.Element {
@@ -31,7 +34,7 @@ export function UpdateUsername(): JSX.Element {
 
   const [codeErrMsg, setCodeErrMsg] = useState('');
   const [codeAvailable, setCodeAvailable] = useState(false);
-  const { user, referralCode } = useAuth();
+  const { user } = useAuth();
   const { open, openModal, closeModal } = useModal();
 
   useEffect(() => {
@@ -73,9 +76,9 @@ export function UpdateUsername(): JSX.Element {
   }, [inputName, inputCode]);
 
   useEffect(() => {
-    if (referralCode) {
-      setInputCode(referralCode);
-    }
+    // if (referralCode) {
+    //   setInputCode(referralCode);
+    // }
     if (!user?.updatedAt) openModal();
     else setNameAlreadySet(true);
   }, []);
@@ -92,7 +95,17 @@ export function UpdateUsername(): JSX.Element {
     await sleep(500);
 
     await updateUsername(user?.id as string, inputName);
-    await updateReferrerBalance(referralCode);
+
+    // const { data: userData } = useCollection(
+    //   query(
+    //     usersCollection,
+    //     where('referralCode', '==', inputCode)
+    //   ),
+    //   { allowNull: true }
+    // );
+    // if (userData) {
+    //   await UpdateReferrerBalance(userData[0].id);
+    // }
     closeModal();
 
     setLoading(false);

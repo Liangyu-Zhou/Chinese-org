@@ -109,7 +109,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                 ) : (
                   <div className='flex gap-2 self-start'>
                     <UserShare username={userData.username} />
-                    <Button
+                    {/* <Button
                       className='dark-bg-tab group relative border border-light-line-reply p-2
                                  hover:bg-light-primary/10 active:bg-light-primary/20 dark:border-light-secondary 
                                  dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
@@ -117,7 +117,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                     >
                       <HeroIcon className='h-5 w-5' iconName='GiftIcon' />
                       <ToolTip tip='Give 100 $CHINESE' />
-                    </Button>
+                    </Button> */}
                     <FollowButton
                       userTargetId={userData.id}
                       userTargetUsername={userData.username}

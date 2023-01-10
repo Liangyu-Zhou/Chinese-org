@@ -36,10 +36,7 @@ const { chains, provider, webSocketProvider } = configureChains(
     arbitrum,
     ...(process.env.REACT_APP_ENABLE_TESTNETS === 'true' ? [goerli] : [])
   ],
-  [
-    alchemyProvider({ apiKey: '_Sh7nSMIHg5SSrr8gszB6ne5zjnXV0yH' }),
-    publicProvider()
-  ]
+  [publicProvider()]
 );
 const { connectors } = getDefaultWallets({
   appName: 'Chinese.org',
