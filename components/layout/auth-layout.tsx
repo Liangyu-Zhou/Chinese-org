@@ -10,14 +10,19 @@ export function AuthLayout({ children }: LayoutProps): JSX.Element {
 
   const { user, loading } = useAuth();
   const { replace } = useRouter();
-
+  const {
+    query: { referralcode }
+  } = useRouter();
   useEffect(() => {
     const checkLogin = async (): Promise<void> => {
       setPending(true);
-
       if (user) {
         await sleep(500);
-        void replace('/home');
+        let url = '/home';
+        if (referralcode && typeof referralcode === 'string') {
+          url += '?referralcode=' + referralcode;
+        }
+        void replace(url);
       } else if (!loading) {
         await sleep(500);
         setPending(false);

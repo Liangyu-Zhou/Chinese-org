@@ -22,6 +22,7 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
   const { address } = useAccount();
   const [BNBalance, setBNBalance] = useState(BN(0));
   const [tick, setTick] = useState(0);
+  const [increment, setIncrement] = useState(0);
   async function getBalance(addr: string): Promise<string> {
     const userStatsRef = doc(userStatsCollection(addr), 'stats');
     const userStats = (await getDoc(userStatsRef)).data();
@@ -43,10 +44,16 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
       });
     }
     const timeoutId = setTimeout(() => {
-      if (address && tick > 1) {
-        setBNBalance(BNBalance.plus(BN(0.001)));
+      if (address && tick > 0) {
+        setIncrement((increment) => increment + 0.001);
         if (tick % 10 == 0) {
-          void updateBalance(address, BNBalance);
+          void getBalance(address).then((balance) => {
+            setBNBalance(BN(balance));
+          });
+        }
+        if (tick % 100 == 0) {
+          void updateBalance(address, BNBalance.plus(increment));
+          setIncrement(0);
         }
       }
       setTick((tick) => tick + 1);
@@ -62,7 +69,9 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
         <p>balance</p>
       </div>
       <div className='flex items-end justify-between pl-5 pr-5'>
-        <p className='text-3xl font-bold '>{BNBalance.toFormat(3)}</p>
+        <p className='text-3xl font-bold '>
+          {BNBalance.plus(increment).toFormat(3)}
+        </p>
         <p>$CHINESE</p>
       </div>
 

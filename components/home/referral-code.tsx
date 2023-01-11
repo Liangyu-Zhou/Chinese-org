@@ -2,87 +2,95 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { checkUsernameAvailability, updateUsername } from '@lib/firebase/utils';
+import {
+  UpdateUserAndReferrerBalance,
+  checkReferralCodeExsits,
+  updateReferredBy
+} from '@lib/firebase/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
-import { isValidUsername } from '@lib/validation';
 import { sleep } from '@lib/utils';
-import { Button } from '@components/ui/button';
-import { HeroIcon } from '@components/ui/hero-icon';
-import { ToolTip } from '@components/ui/tooltip';
 import { Modal } from '@components/modal/modal';
-import { UsernameModal } from '@components/modal/username-modal';
+import { ReferralCodeModal } from '@components/modal/referral-code-modal';
 import { InputField } from '@components/input/input-field';
-import type { FormEvent, ChangeEvent } from 'react';
 
-export function UpdateUsername(): JSX.Element {
+import { usersCollection } from '../../lib/firebase/collections';
+import { useCollection } from '@lib/hooks/useCollection';
+import { query, where } from 'firebase/firestore';
+
+import type { FormEvent, ChangeEvent } from 'react';
+type ReferralCodeProps = {
+  referralCode: string | string[] | undefined;
+};
+export function ReferralCode({ referralCode }: ReferralCodeProps): JSX.Element {
   const [alreadySet, setAlreadySet] = useState(false);
   const [available, setAvailable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [visited, setVisited] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
   const { user } = useAuth();
   const { open, openModal, closeModal } = useModal();
-
-  useEffect(() => {
-    const checkAvailability = async (value: string): Promise<void> => {
-      const empty = await checkUsernameAvailability(value);
-
-      if (empty) setAvailable(true);
+  const { data: referrerData } = useCollection(
+    query(usersCollection, where('referralCode', '==', inputValue)),
+    { allowNull: true }
+  );
+  const checkCodeExistence = async (code: string): Promise<void> => {
+    if (code.length > 0) {
+      const empty = await checkReferralCodeExsits(code);
+      if (!empty) setAvailable(true);
       else {
         setAvailable(false);
-        setErrorMessage('This username has been taken. Please choose another.');
+        setErrorMessage('referral code not exsits.');
       }
-    };
+    }
+  };
 
+  useEffect(() => {
+    if (referralCode && typeof referralCode === 'string') {
+      setInputValue(referralCode);
+      void checkCodeExistence(referralCode);
+    }
+    if (user?.referredBy == null) openModal();
+    else setAlreadySet(true);
+  }, []);
+
+  useEffect(() => {
     if (!visited && inputValue.length > 0) setVisited(true);
 
     if (visited) {
       if (errorMessage) setErrorMessage('');
-
-      const error = isValidUsername(user?.username as string, inputValue);
-
-      if (error) {
-        setAvailable(false);
-        setErrorMessage(error);
-      } else void checkAvailability(inputValue);
+      void checkCodeExistence(inputValue);
     }
   }, [inputValue]);
 
-  useEffect(() => {
-    if (!user?.updatedAt) openModal();
-    else setAlreadySet(true);
-  }, []);
-
-  const changeUsername = async (
+  const setReferralCode = async (
     e: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-
     if (!available) return;
-
     setLoading(true);
-
     await sleep(500);
 
-    await updateUsername(user?.id as string, inputValue);
+    if (referrerData) {
+      await UpdateUserAndReferrerBalance(
+        referrerData[0]?.id as string,
+        user?.id as string
+      );
+      await updateReferredBy(user?.id as string, referrerData[0]?.id);
+    }
 
     closeModal();
-
     setLoading(false);
-
     setInputValue('');
     setVisited(false);
     setAvailable(false);
-
-    toast.success('Username updated successfully');
+    toast.success('Referral code set successfully');
   };
 
-  const cancelUpdateUsername = (): void => {
+  const cancelSetReferralCode = (): void => {
     closeModal();
-    if (!alreadySet) void updateUsername(user?.id as string);
+    if (!alreadySet) void updateReferredBy(user?.id as string, 'empty');
   };
 
   const handleChange = ({
@@ -95,25 +103,26 @@ export function UpdateUsername(): JSX.Element {
       <Modal
         modalClassName='flex flex-col gap-6 max-w-xl bg-main-background w-full p-8 rounded-2xl h-[576px]'
         open={open}
-        closeModal={cancelUpdateUsername}
+        closeModal={cancelSetReferralCode}
       >
-        <UsernameModal
+        <ReferralCodeModal
           loading={loading}
           available={available}
           alreadySet={alreadySet}
-          changeUsername={changeUsername}
-          cancelUpdateUsername={cancelUpdateUsername}
+          setReferralCode={setReferralCode}
+          cancelSetReferralCode={cancelSetReferralCode}
         >
           <InputField
-            label='Username'
-            inputId='username'
+            label='referral code'
+            inputId='referredBy'
             inputValue={inputValue}
             errorMessage={errorMessage}
             handleChange={handleChange}
+            handleKeyboardShortcut={handleChange}
           />
-        </UsernameModal>
+        </ReferralCodeModal>
       </Modal>
-      <Button
+      {/* <Button
         className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
                    active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
                    dark:active:bg-dark-primary/20'
@@ -121,7 +130,7 @@ export function UpdateUsername(): JSX.Element {
       >
         <HeroIcon className='h-5 w-5' iconName='SparklesIcon' />
         <ToolTip tip='Change Username' />
-      </Button>
+      </Button> */}
     </>
   );
 }

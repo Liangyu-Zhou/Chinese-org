@@ -9,6 +9,7 @@ import { Input } from '@components/input/input';
 import { MainHeader } from '@components/home/main-header';
 import type { ReactElement, ReactNode } from 'react';
 import { UpdateUsername } from '../components/home/update-username';
+import { ReferralCode } from '../components/home/referral-code';
 import Switch from 'react-switch';
 import { useAccount } from 'wagmi';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -16,24 +17,10 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button } from '@components/ui/button';
 import { toast } from 'react-hot-toast';
 import { ToolTip as MyTooltip } from '@components/ui/tooltip';
+import { useRouter } from 'next/router';
 
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  onSnapshot,
-  serverTimestamp,
-  WithFieldValue,
-  query,
-  where,
-  limit,
-  getDocs
-} from 'firebase/firestore';
-import {
-  usersCollection,
-  userStatsCollection,
-  userBookmarksCollection
-} from '@lib/firebase/collections';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { userStatsCollection } from '@lib/firebase/collections';
 import type { Stats } from '@lib/types/stats';
 import { calculateCode } from '@lib/utils';
 
@@ -45,6 +32,9 @@ export default function Home(): JSX.Element {
   const [subscribeEmail, setSubscribeEmail] = useState(false);
 
   const { address } = useAccount();
+  const {
+    query: { referralcode }
+  } = useRouter();
 
   async function SetFollowOnTwitter() {
     window.open('http://twitter.com/chinese_org');
@@ -150,6 +140,7 @@ export default function Home(): JSX.Element {
         className='flex items-center justify-between'
       >
         <UpdateUsername />
+        <ReferralCode referralCode={referralcode} />
       </MainHeader>
       {!isMobile && <Input />}
       <section className='bg-main-sidebar-background'>

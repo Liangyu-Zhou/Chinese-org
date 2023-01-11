@@ -80,7 +80,8 @@ export function AuthContextProvider({
           totalPhotos: 0,
           pinnedTweet: null,
           coverPhotoURL: null,
-          referralCode: calculateCode(address)
+          referralCode: calculateCode(address),
+          referredBy: null
         };
 
         const userStatsData: WithFieldValue<Stats> = {
@@ -93,7 +94,6 @@ export function AuthContextProvider({
           taskSubscribeEmail: false,
           balance: BN(_1m).toString()
         };
-        console.log(userStatsData);
         try {
           await Promise.all([
             setDoc(doc(usersCollection, address), userData),

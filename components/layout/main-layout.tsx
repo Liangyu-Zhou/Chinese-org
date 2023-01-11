@@ -10,9 +10,9 @@ const toastOptions: DefaultToastOptions = {
   style: {
     color: 'white',
     borderRadius: '4px',
-    backgroundColor: 'rgb(var(--main-accent))'
+    backgroundColor: 'gray'
   },
-  success: { duration: 4000 }
+  success: { duration: 2000 }
 };
 
 export function MainLayout({ children }: LayoutProps): JSX.Element {

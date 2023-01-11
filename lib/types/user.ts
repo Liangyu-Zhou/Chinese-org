@@ -21,11 +21,18 @@ export type User = {
   pinnedTweet: string | null;
   coverPhotoURL: string | null;
   referralCode: string | null;
+  referredBy: string | null;
 };
 
 export type EditableData = Extract<
   keyof User,
-  'bio' | 'name' | 'website' | 'photoURL' | 'location' | 'coverPhotoURL'
+  | 'bio'
+  | 'name'
+  | 'website'
+  | 'photoURL'
+  | 'location'
+  | 'coverPhotoURL'
+  | 'referredBy'
 >;
 
 export type EditableUserData = Pick<User, EditableData>;

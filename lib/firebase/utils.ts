@@ -23,12 +23,15 @@ import {
   userStatsCollection,
   userBookmarksCollection
 } from './collections';
-import { BigNumber } from 'ethers';
+import BigNumber from 'bignumber.js';
+
 import type { WithFieldValue, Query } from 'firebase/firestore';
 import type { EditableUserData } from '@lib/types/user';
 import type { FilesWithId, ImagesPreview } from '@lib/types/file';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Theme, Accent } from '@lib/types/theme';
+
+const BN = BigNumber.clone({ DECIMAL_PLACES: 18 });
 
 export async function checkUsernameAvailability(
   username: string
@@ -65,17 +68,37 @@ export async function updateUserData(
     updatedAt: serverTimestamp()
   });
 }
-export async function UpdateReferrerBalance(userId: string): Promise<void> {
+
+export async function updateReferredBy(
+  userId: string,
+  referredBy?: string
+): Promise<void> {
+  const userRef = doc(usersCollection, userId);
+  await updateDoc(userRef, {
+    ...(referredBy && { referredBy }),
+    updatedAt: serverTimestamp()
+  });
+}
+
+async function incrementBalance(userId: string, increment: string) {
   const userStatsRef = doc(userStatsCollection(userId), 'stats');
   const userStats = (await getDoc(userStatsRef)).data();
   const balance = userStats?.balance;
-  const newBalance = BigNumber.from(balance).add(
-    BigNumber.from('50000000000000000000000')
-  );
-  await updateDoc(userStatsRef, {
-    balance: newBalance.toString(),
-    updatedAt: serverTimestamp()
-  });
+  if (balance) {
+    const newBalance = BN(balance).plus(increment);
+    await updateDoc(userStatsRef, {
+      balance: newBalance.toString(),
+      updatedAt: serverTimestamp()
+    });
+  }
+}
+
+export async function UpdateUserAndReferrerBalance(
+  referrerId: string,
+  userId: string
+): Promise<void> {
+  await incrementBalance(referrerId, '500000');
+  await incrementBalance(userId, '500000');
 }
 
 export async function updateUserTheme(
