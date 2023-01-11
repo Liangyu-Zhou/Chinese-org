@@ -74,7 +74,7 @@ export function ReferralCode({ referralCode }: ReferralCodeProps): JSX.Element {
 
     if (referrerData) {
       await UpdateUserAndReferrerBalance(
-        referrerData[0]?.id as string,
+        referrerData[0]?.id,
         user?.id as string
       );
       await updateReferredBy(user?.id as string, referrerData[0]?.id);

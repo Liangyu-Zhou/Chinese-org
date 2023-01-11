@@ -39,7 +39,7 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
 
   const [loading, setLoading] = useState(false);
 
-  const { bio, name, website, location, photoURL, coverPhotoURL } =
+  const { bio, name, website, location, photoURL, coverPhotoURL, referredBy } =
     user as User;
 
   const [editUserData, setEditUserData] = useState<EditableUserData>({
@@ -48,7 +48,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
     website,
     photoURL,
     location,
-    coverPhotoURL
+    coverPhotoURL,
+    referredBy
   });
 
   const [userImages, setUserImages] = useState<UserImages>({
@@ -177,7 +178,8 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       website,
       photoURL,
       location,
-      coverPhotoURL
+      coverPhotoURL,
+      referredBy
     });
 
   const handleChange =
