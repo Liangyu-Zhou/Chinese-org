@@ -54,7 +54,7 @@ export function MoreSettings(): JSX.Element {
             <AnimatePresence>
               {open && (
                 <Menu.Items
-                  className='menu-container absolute -top-44 w-60 font-medium xl:w-11/12'
+                  className='menu-container fixed top-[80px] w-60 font-medium xl:top-[180px]'
                   as={motion.div}
                   {...variants}
                   static

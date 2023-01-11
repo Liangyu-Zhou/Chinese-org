@@ -65,12 +65,19 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
     <section
       className={'hover-animation rounded-2xl bg-main-sidebar-background'}
     >
-      <div className='mt-5 flex flex-row justify-between pl-5 pt-1 pb-2'>
+      <div className='mx-5 mt-4 mb-2 flex items-end  gap-3  border-b pb-1 text-2xl font-bold'>
+        <img
+          src='/assets/data-mining.gif'
+          className='h-[50px] w-[50px] rounded-full'
+        ></img>
+        <p>Login as Mining</p>
+      </div>
+      <div className='flex flex-row justify-between pl-5 pb-2'>
         <p>balance</p>
       </div>
       <div className='flex items-end justify-between pl-5 pr-5'>
-        <p className='text-3xl font-bold '>
-          {BNBalance.plus(increment).toFormat(3)}
+        <p className='text-2xl font-bold '>
+          {BNBalance.plus(increment).toFormat(5)}
         </p>
         <p>$CHINESE</p>
       </div>

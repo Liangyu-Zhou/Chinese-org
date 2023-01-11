@@ -1,9 +1,12 @@
 const footerLinks = [
-  ['Terms of Service', 'https://Chinese.org/1'],
-  ['Privacy Policy', 'https://Chinese.org/2'],
-  ['Cookie Policy', 'https://Chinese.org/3'],
-  ['Accessibility', 'https://Chinese.org/4'],
-  ['Ads Info', 'https://Chinese.org/5']
+  ['Terms of Service', 'https://twitter.com/tos'],
+  ['Privacy Policy', 'https://twitter.com/privacy'],
+  ['Cookie Policy', 'https://support.twitter.com/articles/20170514'],
+  ['Accessibility', 'https://help.twitter.com/resources/accessibility'],
+  [
+    'Ads Info',
+    'https://business.twitter.com/en/help/troubleshooting/how-twitter-ads-work.html'
+  ]
 ] as const;
 
 export function AsideFooter(): JSX.Element {

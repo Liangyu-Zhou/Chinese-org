@@ -88,7 +88,7 @@
   }
 
   .menu-container {
-    @apply z-10 rounded-md bg-main-background outline-none 
+    @apply z-50 rounded-md bg-main-background outline-none 
            [box-shadow:#65778633_0px_0px_15px,_#65778626_0px_0px_3px_1px] 
            dark:[box-shadow:#ffffff33_0px_0px_15px,_#ffffff26_0px_0px_3px_1px];
   }

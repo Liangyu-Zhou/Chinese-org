@@ -17,7 +17,7 @@ const Navbar = () => {
         <li className='p-4'>GALLERY</li>
         <li className='p-4'>FAQ</li>
         <li className='whitespace-nowrap p-4'>JOIN US</li>
-        <li className='p-4'>
+        <li className='w-[250px] p-4'>
           <ConnectButton label='LogIn / SignUp' />
         </li>
       </ul>
@@ -45,7 +45,7 @@ const Navbar = () => {
             JOIN US
           </li>
           <li className='border-b border-gray-600 p-4'>
-            <ConnectButton label='login'></ConnectButton>
+            <ConnectButton label='LogIn / SignUp'></ConnectButton>
           </li>
         </ul>
       </div>

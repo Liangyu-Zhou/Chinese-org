@@ -50,9 +50,10 @@ export function SearchBar(): JSX.Element {
           />
         </i>
         <input
-          className='peer flex-1 bg-transparent outline-none 
-                     placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
+          className='peer flex-1 bg-transparent outline-none
+                     placeholder:text-light-secondary dark:placeholder:text-dark-secondary '
           type='text'
+          disabled={true}
           placeholder='Search Tweets'
           ref={inputRef}
           value={inputValue}

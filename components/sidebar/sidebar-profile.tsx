@@ -63,7 +63,7 @@ export function SidebarProfile(): JSX.Element {
             <AnimatePresence>
               {open && (
                 <Menu.Items
-                  className='menu-container absolute left-0 right-0 -top-36 w-60 xl:w-full'
+                  className='menu-container fixed  bottom-[90px] w-60'
                   as={motion.div}
                   {...variants}
                   static
