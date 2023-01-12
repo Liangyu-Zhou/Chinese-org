@@ -193,7 +193,7 @@ export default function Home(): JSX.Element {
               <p>Referral link to share:</p>
             </div>
             <div className='flex flex-wrap items-center'>
-              <p className='font-bold text-[#ff7235]'>{referralLink}</p>
+              <span className='font-bold text-[#ff7235]'>{referralLink}</span>
               <CopyToClipboard
                 text={referralLink}
                 onCopy={() => {
