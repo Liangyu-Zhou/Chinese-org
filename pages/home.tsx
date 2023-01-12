@@ -21,6 +21,7 @@ import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { userStatsCollection } from '@lib/firebase/collections';
 import type { Stats } from '@lib/types/stats';
 import { useAuth } from '@lib/context/auth-context';
+import next from 'next';
 
 export default function Home(): JSX.Element {
   const { isMobile } = useWindow();
@@ -87,9 +88,14 @@ export default function Home(): JSX.Element {
     }
   }
 
-  async function sendTokenAfterTask() {}
+  async function sendTokenAfterTask() {
+    if (user) {
+      await getDoc(doc(userStatsCollection(user.id), 'stats'));
+    }
+  }
 
   useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_URL);
     const setTask = async (address: string) => {
       const userStats = (
         await getDoc(doc(userStatsCollection(address), 'stats'))
@@ -111,7 +117,10 @@ export default function Home(): JSX.Element {
 
     const setUserReferralLinks = (referralCode: string) => {
       //todo: base64编码
-      const url = 'http://localhost:3000/?referralcode=' + referralCode;
+      const url =
+        (process.env.NEXT_PUBLIC_URL as string) +
+        '?referralcode=' +
+        encodeURI(referralCode);
       setRefferalLink(url);
     };
     if (user) {

@@ -32,7 +32,7 @@ export function ReferralCode({ referralCode }: ReferralCodeProps): JSX.Element {
   const { user } = useAuth();
   const { open, openModal, closeModal } = useModal();
   const { data: referrerData } = useCollection(
-    query(usersCollection, where('referralCode', '==', inputValue)),
+    query(usersCollection, where('username', '==', inputValue)),
     { allowNull: true }
   );
   const checkCodeExistence = async (code: string): Promise<void> => {
@@ -48,8 +48,9 @@ export function ReferralCode({ referralCode }: ReferralCodeProps): JSX.Element {
 
   useEffect(() => {
     if (referralCode && typeof referralCode === 'string') {
-      setInputValue(referralCode);
-      void checkCodeExistence(referralCode);
+      const decodedCode = decodeURI(referralCode);
+      setInputValue(decodedCode);
+      void checkCodeExistence(decodedCode);
     }
     if (user?.referredBy == null) openModal();
     else setAlreadySet(true);

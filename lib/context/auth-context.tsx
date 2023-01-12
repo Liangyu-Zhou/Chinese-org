@@ -21,7 +21,6 @@ import { useAccount, useDisconnect } from 'wagmi';
 import { ChineseWithSigner } from '../contract/contract';
 import { minifyName } from '../../lib/utils';
 import BigNumber from 'bignumber.js';
-import { calculateCode } from '@lib/utils';
 
 type AuthContext = {
   user: User | null;
@@ -80,7 +79,6 @@ export function AuthContextProvider({
           totalPhotos: 0,
           pinnedTweet: null,
           coverPhotoURL: null,
-          referralCode: calculateCode(address),
           referredBy: null
         };
 

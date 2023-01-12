@@ -46,7 +46,7 @@ export async function checkReferralCodeExsits(
   referralCode: string
 ): Promise<boolean> {
   const { empty } = await getDocs(
-    query(usersCollection, where('referralCode', '==', referralCode), limit(1))
+    query(usersCollection, where('username', '==', referralCode), limit(1))
   );
   return empty;
 }
