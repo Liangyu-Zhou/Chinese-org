@@ -5,6 +5,7 @@ import { ToolTip } from '@components/ui/tooltip';
 import { MobileSidebar } from '@components/sidebar/mobile-sidebar';
 import type { ReactNode } from 'react';
 import type { IconName } from '@components/ui/hero-icon';
+import { useBalance } from '@lib/context/balance-context';
 
 type HomeHeaderProps = {
   tip?: string;
@@ -29,6 +30,8 @@ export function MainHeader({
   useMobileSidebar,
   action
 }: HomeHeaderProps): JSX.Element {
+  const { balance, increment, loading } = useBalance();
+
   return (
     <header
       className={cn(
@@ -51,11 +54,21 @@ export function MainHeader({
         </Button>
       )}
       {title && (
-        <div className='flex gap-8'>
+        <div className='flex items-end gap-8'>
           {useMobileSidebar && <MobileSidebar />}
           <h2 className='text-xl font-bold' key={title}>
             {title}
           </h2>
+          <div className='flex items-end justify-between pl-5 pr-5 lg:hidden'>
+            <p className='pr-2'>balance:</p>
+            {loading ? (
+              <p className='text-2xl font-bold '>loading balance...</p>
+            ) : (
+              <p className='text-2xl font-bold '>
+                {balance.plus(increment).toFormat(2)}
+              </p>
+            )}
+          </div>
         </div>
       )}
       {children}

@@ -35,7 +35,7 @@ export function LoginFooter(): JSX.Element {
             {linkName}
           </a>
         ))}
-        <p>© 2022 Chinese.org</p>
+        <p>© 2023 Chinese.org</p>
       </nav>
     </footer>
   );

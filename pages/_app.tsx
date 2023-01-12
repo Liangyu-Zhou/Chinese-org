@@ -2,6 +2,7 @@ import '@styles/globals.scss';
 
 import { AuthContextProvider } from '@lib/context/auth-context';
 import { ThemeContextProvider } from '@lib/context/theme-context';
+import { BalanceContextProvider } from '@lib/context/balance-context';
 import { AppHead } from '@components/common/app-head';
 import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
@@ -71,9 +72,11 @@ export default function App({
           })}
         >
           <AuthContextProvider>
-            <ThemeContextProvider>
-              {getLayout(<Component {...pageProps} />)}
-            </ThemeContextProvider>
+            <BalanceContextProvider>
+              <ThemeContextProvider>
+                {getLayout(<Component {...pageProps} />)}
+              </ThemeContextProvider>
+            </BalanceContextProvider>
           </AuthContextProvider>
         </RainbowKitProvider>
       </WagmiConfig>

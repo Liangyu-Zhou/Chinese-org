@@ -1,10 +1,6 @@
-import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
-import { userStatsCollection } from '../../lib/firebase/collections';
 import type { MotionProps } from 'framer-motion';
-import { useAccount } from 'wagmi';
-import { useEffect, useState } from 'react';
 import { Button } from '@components/ui/button';
-import BigNumber from 'bignumber.js';
+import { useBalance } from '@lib/context/balance-context';
 
 export const variants: MotionProps = {
   initial: { opacity: 0 },
@@ -15,59 +11,16 @@ export const variants: MotionProps = {
 type AsideTokensProps = {
   tokenVal?: number;
 };
-const e18 = '1000000000000000000';
-const _0001In18Decimal = '1000000000000000';
+
 export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
-  const BN = BigNumber.clone({ DECIMAL_PLACES: 18 });
-  const { address } = useAccount();
-  const [BNBalance, setBNBalance] = useState(BN(0));
-  const [tick, setTick] = useState(0);
-  const [increment, setIncrement] = useState(0);
-  async function getBalance(addr: string): Promise<string> {
-    const userStatsRef = doc(userStatsCollection(addr), 'stats');
-    const userStats = (await getDoc(userStatsRef)).data();
-    const balance = userStats?.balance ? userStats?.balance : '0';
-    return balance;
-  }
-  async function updateBalance(addr: string, newBalance: BigNumber) {
-    const userStatsRef = doc(userStatsCollection(addr), 'stats');
-    await updateDoc(userStatsRef, {
-      balance: newBalance.toString(),
-      updatedAt: serverTimestamp()
-    });
-  }
-
-  useEffect(() => {
-    if (address && BNBalance.isEqualTo(BN(0))) {
-      void getBalance(address).then((balance) => {
-        setBNBalance(BN(balance));
-      });
-    }
-    const timeoutId = setTimeout(() => {
-      if (address && tick > 0) {
-        setIncrement((increment) => increment + 0.001);
-        if (tick % 10 == 0) {
-          void getBalance(address).then((balance) => {
-            setBNBalance(BN(balance));
-          });
-        }
-        if (tick % 100 == 0) {
-          void updateBalance(address, BNBalance.plus(increment));
-          setIncrement(0);
-        }
-      }
-      setTick((tick) => tick + 1);
-    }, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [tick, address]);
-
+  const { balance, increment, loading } = useBalance();
   return (
     <section
       className={'hover-animation rounded-2xl bg-main-sidebar-background'}
     >
       <div className='mx-5 mt-4 mb-2 flex items-end  gap-3  border-b pb-1 text-2xl font-bold'>
         <img
-          src='/assets/data-mining.gif'
+          src='/assets/coin2.gif'
           className='h-[50px] w-[50px] rounded-full'
         ></img>
         <p>Login as Mining</p>
@@ -76,9 +29,13 @@ export function AsideTokens({ tokenVal }: AsideTokensProps): JSX.Element {
         <p>balance</p>
       </div>
       <div className='flex items-end justify-between pl-5 pr-5'>
-        <p className='text-2xl font-bold '>
-          {BNBalance.plus(increment).toFormat(5)}
-        </p>
+        {loading ? (
+          <p className='text-2xl font-bold '>loading balance...</p>
+        ) : (
+          <p className='text-2xl font-bold '>
+            {balance.plus(increment).toFormat(2)}
+          </p>
+        )}
         <p>$CHINESE</p>
       </div>
 

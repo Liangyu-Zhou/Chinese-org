@@ -28,7 +28,7 @@ export function AsideFooter(): JSX.Element {
           </a>
         ))}
       </nav>
-      <p>© 2022 Chinese.org</p>
+      <p>© 2023 Chinese.org</p>
     </footer>
   );
 }
