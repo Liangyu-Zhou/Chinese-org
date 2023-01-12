@@ -1,4 +1,3 @@
-import { ChineseWithSigner } from '../lib/contract/contract';
 import { useState, useEffect } from 'react';
 import { useWindow } from '@lib/context/window-context';
 import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
@@ -11,7 +10,6 @@ import type { ReactElement, ReactNode } from 'react';
 import { UpdateUsername } from '../components/home/update-username';
 import { ReferralCode } from '../components/home/referral-code';
 import Switch from 'react-switch';
-import { useAccount } from 'wagmi';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button } from '@components/ui/button';
@@ -22,7 +20,7 @@ import { useRouter } from 'next/router';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { userStatsCollection } from '@lib/firebase/collections';
 import type { Stats } from '@lib/types/stats';
-import { calculateCode } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
 
 export default function Home(): JSX.Element {
   const { isMobile } = useWindow();
@@ -31,17 +29,18 @@ export default function Home(): JSX.Element {
   const [joinDiscord, setJoinDiscord] = useState(false);
   const [subscribeEmail, setSubscribeEmail] = useState(false);
 
-  const { address } = useAccount();
+  const { user } = useAuth();
+
   const {
-    query: { referralcode }
+    query: { referralcode } //referralcode stands for referral code passed in through route
   } = useRouter();
 
   async function SetFollowOnTwitter() {
     window.open('http://twitter.com/chinese_org');
     setFollowOnTwitter(true);
     await sendTokenAfterTask();
-    if (address) {
-      const userStatsRef = doc(userStatsCollection(address), 'stats');
+    if (user) {
+      const userStatsRef = doc(userStatsCollection(user.id), 'stats');
       await updateDoc(userStatsRef, {
         taskFollowOnTwitter: true,
         updatedAt: serverTimestamp()
@@ -53,8 +52,8 @@ export default function Home(): JSX.Element {
     window.open(' https://t.me/ChineseOfficial');
     setJoinTelegram(true);
     await sendTokenAfterTask();
-    if (address) {
-      const userStatsRef = doc(userStatsCollection(address), 'stats');
+    if (user) {
+      const userStatsRef = doc(userStatsCollection(user.id), 'stats');
       await updateDoc(userStatsRef, {
         taskJoinTelegram: true,
         updatedAt: serverTimestamp()
@@ -66,8 +65,8 @@ export default function Home(): JSX.Element {
     window.open(' https://discord.com/invite/chinese');
     setJoinDiscord(true);
     await sendTokenAfterTask();
-    if (address) {
-      const userStatsRef = doc(userStatsCollection(address), 'stats');
+    if (user) {
+      const userStatsRef = doc(userStatsCollection(user.id), 'stats');
       await updateDoc(userStatsRef, {
         taskJoinDiscord: true,
         updatedAt: serverTimestamp()
@@ -79,8 +78,8 @@ export default function Home(): JSX.Element {
     window.open('https://www.w3schools.com');
     setSubscribeEmail(true);
     await sendTokenAfterTask();
-    if (address) {
-      const userStatsRef = doc(userStatsCollection(address), 'stats');
+    if (user) {
+      const userStatsRef = doc(userStatsCollection(user.id), 'stats');
       await updateDoc(userStatsRef, {
         taskSubscribeEmail: true,
         updatedAt: serverTimestamp()
@@ -88,12 +87,7 @@ export default function Home(): JSX.Element {
     }
   }
 
-  const _100In18Decimal = '100000000000000000000';
-  async function sendTokenAfterTask() {
-    if (address) {
-      await ChineseWithSigner.transfer(address, _100In18Decimal);
-    }
-  }
+  async function sendTokenAfterTask() {}
 
   useEffect(() => {
     const setTask = async (address: string) => {
@@ -115,17 +109,17 @@ export default function Home(): JSX.Element {
       }
     };
 
-    const setUserReferralLinks = (address: string) => {
-      const code = calculateCode(address);
-      const url = 'http://localhost:3000/?referralcode=' + code;
+    const setUserReferralLinks = (referralCode: string) => {
+      //todo: base64编码
+      const url = 'http://localhost:3000/?referralcode=' + referralCode;
       setRefferalLink(url);
     };
-    if (address) {
-      void setTask(address);
-      setRefferalCode(calculateCode(address));
-      setUserReferralLinks(address);
+    if (user) {
+      void setTask(user.id);
+      setRefferalCode(user.username);
+      setUserReferralLinks(user.username);
     }
-  }, [address]);
+  }, [user]);
 
   const [checked, setChecked] = useState(false);
   const [referralCode, setRefferalCode] = useState('');
@@ -159,57 +153,62 @@ export default function Home(): JSX.Element {
               Invite Chinese Compatriots
             </p>
           </div>
-          <div className='flex flex-wrap items-center p-5'>
-            <span className='pr-1 '>Share your referral code</span>
-            <span className='text-[#ff7235]'>{referralCode}</span>
-            <CopyToClipboard
-              text={referralCode}
-              onCopy={() => {
-                setCopied(true);
-                toast.success('Copied to clipboard');
-              }}
-            >
-              <Button
-                className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
+          <div className='flex flex-col items-start p-5'>
+            <div className='flex flex-wrap'>
+              <span>Referral code to share:</span>
+            </div>
+            <div className='flex items-center'>
+              <span className='font-bold text-[#ff7235]'>{referralCode}</span>
+              <CopyToClipboard
+                text={referralCode}
+                onCopy={() => {
+                  setCopied(true);
+                  toast.success('Copied to clipboard');
+                }}
+              >
+                <Button
+                  className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
                    active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
                    dark:active:bg-dark-primary/20'
+                >
+                  <HeroIcon
+                    className='h-4 w-4'
+                    iconName='ClipboardDocumentIcon'
+                    solid={false}
+                  />
+                  <MyTooltip tip='Copy' />
+                </Button>
+              </CopyToClipboard>
+            </div>
+            <div className='flex flex-wrap'>
+              <p>Referral link to share:</p>
+            </div>
+            <div className='flex flex-wrap items-center'>
+              <p className='font-bold text-[#ff7235]'>{referralLink}</p>
+              <CopyToClipboard
+                text={referralLink}
+                onCopy={() => {
+                  setCopied(true);
+                  toast.success('Copied to clipboard');
+                }}
               >
-                <HeroIcon
-                  className='h-4 w-4'
-                  iconName='ClipboardDocumentIcon'
-                  solid={false}
-                />
-                <MyTooltip tip='Copy' />
-              </Button>
-            </CopyToClipboard>
-            <p className='pr-2'>or</p>
-            <a href={referralLink} className='text-[#ff7235] hover:underline'>
-              invitation link
-            </a>
-            <CopyToClipboard
-              text={referralLink}
-              onCopy={() => {
-                setCopied(true);
-                toast.success('Copied to clipboard');
-              }}
-            >
-              <Button
-                className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
+                <Button
+                  className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
                    active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
                    dark:active:bg-dark-primary/20'
-              >
-                <HeroIcon
-                  className='h-4 w-4'
-                  iconName='ClipboardDocumentIcon'
-                  solid={false}
-                />
-                <MyTooltip tip='Copy' />
-              </Button>
-            </CopyToClipboard>
-            <span className='pr-1 '>To claim</span>
-            <span className='pr-1 '>50,000</span>
-            <span className='pr-1 '>$CHINESE</span>
-            <span className='pr-1 '>for every new user</span>
+                >
+                  <HeroIcon
+                    className='h-4 w-4'
+                    iconName='ClipboardDocumentIcon'
+                    solid={false}
+                  />
+                  <MyTooltip tip='Copy' />
+                </Button>
+              </CopyToClipboard>
+            </div>
+            <span className='flex flex-wrap'>
+              Share to claim 50,000 $CHINESE for every new user
+            </span>
           </div>
         </div>
 
